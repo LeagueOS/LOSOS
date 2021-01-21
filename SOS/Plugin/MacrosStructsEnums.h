@@ -1,5 +1,19 @@
 #pragma once
+#include "bakkesmod/plugin/bakkesmodplugin.h"
 
+extern std::shared_ptr<CVarManagerWrapper> globalCvarManager;
+
+// MACROS //
+
+#define SHOULDLOG 0
+#if SHOULDLOG
+    #define LOGC(x) globalCvarManager->log(x)
+#else
+    #define LOGC(x)
+#endif
+
+
+// STRUCTS //
 
 struct LastTouchInfo
 {
