@@ -1,10 +1,14 @@
-#include "SOS.h"
+#include "WebsocketManager.h"
+#include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "json.hpp"
 #include "utils/parser.h"
 
 
-// SEND EVENTS
-void SOS::SendEvent(std::string eventName, const json::JSON &jsawn)
+// PUBLIC FUNCTIONS //
+WebsocketManager::WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort)
+    : cvarManager(InCvarManager), ListenPort(InListenPort) {}
+
+void WebsocketManager::SendEvent(std::string eventName, const json::JSON &jsawn)
 {
     json::JSON event;
     event["event"] = eventName;
@@ -12,31 +16,34 @@ void SOS::SendEvent(std::string eventName, const json::JSON &jsawn)
     SendWebSocketPayload(event.dump());
 }
 
-// WEBSOCKET CODE
-void SOS::RunWsServer()
+void WebsocketManager::StartServer()
 {
-    cvarManager->log("[SOS] Starting WebSocket server");
+    using namespace std::placeholders;
+
+    cvarManager->log("Starting WebSocket server");
 
     ws_connections = new ConnectionSet();
     ws_server = new PluginServer();
     
-    cvarManager->log("[SOS] Starting asio");
+    cvarManager->log("Starting asio");
     ws_server->init_asio();
-    ws_server->set_open_handler(websocketpp::lib::bind(&SOS::OnWsOpen, this, _1));
-    ws_server->set_close_handler(websocketpp::lib::bind(&SOS::OnWsClose, this, _1));
-    ws_server->set_message_handler(websocketpp::lib::bind(&SOS::OnWsMsg, this, _1, _2));
-    ws_server->set_http_handler(websocketpp::lib::bind(&SOS::OnHttpRequest, this, _1));
+    ws_server->set_open_handler(websocketpp::lib::bind(&WebsocketManager::OnWsOpen, this, _1));
+    ws_server->set_close_handler(websocketpp::lib::bind(&WebsocketManager::OnWsClose, this, _1));
+    ws_server->set_message_handler(websocketpp::lib::bind(&WebsocketManager::OnWsMsg, this, _1, _2));
+    ws_server->set_http_handler(websocketpp::lib::bind(&WebsocketManager::OnHttpRequest, this, _1));
     
-    cvarManager->log("[SOS] Starting listen on port 49122");
-    ws_server->listen(*cvarPort);
+    cvarManager->log("Starting listen on port " + std::to_string(ListenPort));
+    ws_server->listen(ListenPort);
     
-    cvarManager->log("[SOS] Starting accepting connections");
+    cvarManager->log("Starting accepting connections");
     ws_server->start_accept();
     ws_server->run();
 }
 
-void SOS::StopWsServer()
+void WebsocketManager::StopServer()
 {
+    cvarManager->log("[SOS] Stopping websocket server");
+
     if (ws_server)
     {
         ws_server->stop();
@@ -53,12 +60,14 @@ void SOS::StopWsServer()
     }
 }
 
-void SOS::OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg)
+
+// PRIVATE FUNCTIONS //
+void WebsocketManager::OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg)
 {
-    this->SendWebSocketPayload(msg->get_payload());
+    SendWebSocketPayload(msg->get_payload());
 }
 
-void SOS::OnHttpRequest(websocketpp::connection_hdl hdl)
+void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
 {
     PluginServer::connection_ptr connection = ws_server->get_con_from_hdl(hdl);
     connection->append_header("Content-Type", "application/json");
@@ -80,14 +89,14 @@ void SOS::OnHttpRequest(websocketpp::connection_hdl hdl)
     connection->set_status(websocketpp::http::status_code::not_found);
 }
 
-void SOS::SendWebSocketPayload(std::string payload)
+void WebsocketManager::SendWebSocketPayload(std::string payload)
 {
     // broadcast to all connections
     try
     {
         std::string output = payload;
 
-        if (*cvarUseBase64)
+        if (bUseBase64)
         {
             output = base64_encode((const unsigned char*)payload.c_str(), (unsigned int)payload.size());
         }
