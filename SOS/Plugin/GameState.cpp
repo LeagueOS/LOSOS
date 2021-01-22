@@ -93,7 +93,7 @@ void SOS::GetIndividualPlayerInfo(json::JSON& state, PriWrapper pri)
     state["players"][id]["saves"] = pri.GetMatchSaves();
     state["players"][id]["touches"] = pri.GetBallTouches();
     state["players"][id]["cartouches"] = pri.GetCarTouches();
-    //state["players"][id]["demos"] = pri.GetMatchDemolishes(); //Always returns 0
+    state["players"][id]["demos"] = SOS::DemoCounterGetCount(id);
 
     CarWrapper car = pri.GetCar();
 
@@ -444,5 +444,30 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
         goalScoreData["ball_last_touch"]["player"] = lastTouch.playerID;
         goalScoreData["ball_last_touch"]["speed"] = lastTouch.speed;
         Websocket->SendEvent("game:goal_scored", goalScoreData);
+    }
+    //Demolition event
+    if (eventStr == "Demolition")
+    {
+        SOS::DemoCounterIncrement(receiverID);
+    }
+}
+
+void SOS::DemoCounterIncrement(std::string playerId)
+{
+    if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
+        DemolitionCountMap[playerId] = 1;
+    }
+    else {
+        DemolitionCountMap[playerId]++;
+    }
+}
+
+int SOS::DemoCounterGetCount(std::string playerId)
+{
+    if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
+        return 0;
+    }
+    else {
+        return DemolitionCountMap[playerId];
     }
 }

@@ -141,6 +141,7 @@ void SOS::HookMatchDestroyed()
     firstCountdownHit = false;
     isCurrentlySpectating = false;
     Clock->ResetClock();
+    DemolitionCountMap.clear();
 
     Websocket->SendEvent("game:match_destroyed", "game_match_destroyed");
 }

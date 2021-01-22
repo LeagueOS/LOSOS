@@ -81,4 +81,10 @@ private:
     void GetNameplateInfo(CanvasWrapper canvas);
     void GetLastTouchInfo(CarWrapper car, void* params);
     void GetStatEventInfo(ServerWrapper caller, void* params);
+
+    // DEMO TRACKER
+    std::map<std::string, int> DemolitionCountMap{};
+    void DemoCounterIncrement(std::string playerId);
+    int DemoCounterGetCount(std::string playerId);
+
 };
