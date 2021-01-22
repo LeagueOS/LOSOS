@@ -17,7 +17,6 @@ void SOS::UpdateGameState(CanvasWrapper canvas)
     state["hasGame"] = true;
 
     GetGameStateInfo(canvas, state);
-    Websocket->SendEvent("game:update_state", state);
 }
 
 void SOS::GetGameStateInfo(CanvasWrapper canvas, json::JSON& state)
@@ -50,6 +49,7 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json::JSON& state)
         GetCameraInfo(state);
         
         LastGameStateCallTime = steady_clock::now();
+        Websocket->SendEvent("game:update_state", state);
     }
 
     //Nameplates - twice the rate of game state for better positioning fidelity?
