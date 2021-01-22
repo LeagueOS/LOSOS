@@ -122,6 +122,7 @@ void SOS::HookMatchCreated()
 
     Clock->ResetClock();
     matchCreated = true;
+    DemolitionCountMap.clear();
     Websocket->SendEvent("game:match_created", "game_match_created");
 }
 
