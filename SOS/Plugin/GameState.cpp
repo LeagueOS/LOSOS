@@ -112,14 +112,14 @@ void SOS::GetIndividualPlayerInfo(json::JSON& state, PriWrapper pri)
 	}
 
 	Vector carLocation = car.GetLocation();
-	state["players"][id]["x"] = carLocation.X;
-	state["players"][id]["y"] = carLocation.Y;
-	state["players"][id]["z"] = carLocation.Z;
+	state["players"][id]["location"]["X"] = carLocation.X;
+	state["players"][id]["location"]["Y"] = carLocation.Y;
+	state["players"][id]["location"]["Z"] = carLocation.Z;
 
 	Rotator carRotation = car.GetRotation();
-	state["players"][id]["roll"] = carRotation.Roll;
-	state["players"][id]["pitch"] = carRotation.Pitch;
-	state["players"][id]["yaw"] = carRotation.Yaw;
+	state["players"][id]["location"]["roll"] = carRotation.Roll;
+	state["players"][id]["location"]["pitch"] = carRotation.Pitch;
+	state["players"][id]["location"]["yaw"] = carRotation.Yaw;
 
 	state["players"][id]["onWall"] = car.IsOnWall();
 	state["players"][id]["onGround"] = car.IsOnGround();
@@ -227,22 +227,22 @@ void SOS::GetBallInfo(json::JSON& state, ServerWrapper server)
     //Ball is null
     if (ball.IsNull())
     {
-        state["game"]["ballSpeed"] = 0;
-        state["game"]["ballTeam"] = 255;
+        state["game"]["ball"]["speed"] = 0;
+        state["game"]["ball"]["team"] = 255;
         state["game"]["isReplay"] = false;
         return;
     }
 
 	//Get ball info
-	state["game"]["ballSpeed"] = static_cast<int>(BallSpeed->GetCachedBallSpeed());
-	state["game"]["ballTeam"] = ball.GetHitTeamNum();
+	state["game"]["ball"]["speed"] = static_cast<int>(BallSpeed->GetCachedBallSpeed());
+	state["game"]["ball"]["team"] = ball.GetHitTeamNum();
 	state["game"]["isReplay"] = ball.GetbReplayActor() ? true : false;
 
 	//Get Ball Location
 	Vector ballLocation = ball.GetLocation();
-	state["game"]["ballX"] = ballLocation.X;
-	state["game"]["ballY"] = ballLocation.Y;
-	state["game"]["ballZ"] = ballLocation.Z;
+	state["game"]["ball"]["location"]["X"] = ballLocation.X;
+	state["game"]["ball"]["location"]["Y"] = ballLocation.Y;
+	state["game"]["ball"]["location"]["Z"] = ballLocation.Z;
 }
 
 void SOS::GetWinnerInfo(json::JSON& state, ServerWrapper server)
@@ -412,23 +412,26 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     auto label = statEvent.GetLabel();
     auto eventStr = label.ToString();
 
+    //Receiver info
+    auto receiver = PriWrapper(tArgs->Receiver);
+    std::string receiverName, receiverID;
+    SOSUtils::GetNameAndID(receiver, receiverName, receiverID);
+
     //Victim info
     auto victim = PriWrapper(tArgs->Victim);
     std::string victimName, victimID;
     SOSUtils::GetNameAndID(victim, victimName, victimID);
-    
-    //Receiver info
-    auto receiver = PriWrapper(tArgs->Receiver);
-    std::string receiverName, receiverID;
-    SOSUtils::GetNameAndID(receiver, receiverName, receiverID); 
+   
 
     //General statfeed event
     json::JSON statfeed;
     statfeed["type"] = eventStr;
     statfeed["main_target"]["name"] = receiverName;
     statfeed["main_target"]["id"] = receiverID;
+    statfeed["main_target"]["team_num"] = receiver.GetTeamNum();
     statfeed["secondary_target"]["name"] = victimName;
     statfeed["secondary_target"]["id"] = victimID;
+    statfeed["secondary_target"]["team_num"] = victim.IsNull() ? -1 : victim.GetTeamNum();
     Websocket->SendEvent("game:statfeed_event", statfeed);
 
     //Goal statfeed event
