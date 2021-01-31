@@ -106,9 +106,8 @@ void WebsocketManager::SendWebSocketPayload(std::string payload)
 void WebsocketManager::OnWsOpen(websocketpp::connection_hdl hdl) {
     ws_connections->insert(hdl); 
 
-
     json::JSON data;
     data["event"] = "sos:version";
     data["data"] = std::string(SOS_VERSION);
-    ws_server->send(hdl, data.ToString(), websocketpp::frame::opcode::text);
+    ws_server->send(hdl, data.dump(), websocketpp::frame::opcode::text);
 }

@@ -34,13 +34,24 @@ The websocket reports the following events in `channel:event` format:
 
 ```json
 {
-  "wsRelay:info": "string",
+  "sos:version": "string",
+  "game:match_created": "string",
+  "game:initialized": "string",
+  "game:pre_countdown_begin": "string",
+  "game:post_countdown_begin": "string",
   "game:update_state": {
     "event": "string",
     "game": {
       "arena": "string",
-      "ballSpeed": "number",
-      "ballTeam": "number",
+      "ball": {
+        "location": {
+          "X": "number",
+          "Y": "number",
+          "Z": "number"
+        },
+        "speed": "number",
+        "team": "number"
+      },
       "hasTarget": "boolean",
       "hasWinner": "boolean",
       "isOT": "boolean",
@@ -48,16 +59,16 @@ The websocket reports the following events in `channel:event` format:
       "target": "string",
       "teams": {
         "0": {
-          "name": "string",
-          "score": "number",
           "color_primary": "string",
-          "color_secondary": "string"
+          "color_secondary": "string",
+          "name": "string",
+          "score": "number"
         },
         "1": {
-          "name": "string",
-          "score": "number",
           "color_primary": "string",
-          "color_secondary": "string"
+          "color_secondary": "string",
+          "name": "string",
+          "score": "number"
         }
       },
       "time": "number",
@@ -70,15 +81,28 @@ The websocket reports the following events in `channel:event` format:
         "attacker": "string",
         "boost": "number",
         "cartouches": "number",
+        "demos": "number",
         "goals": "number",
         "hasCar": "boolean",
         "id": "string",
         "isDead": "boolean",
+        "isPowersliding": "boolean",
         "isSonic": "boolean",
+        "location": {
+          "X": "number",
+          "Y": "number",
+          "Z": "number",
+          "pitch": "number",
+          "roll": "number",
+          "yaw": "number"
+        },
         "name": "string",
-        "primaryID": "number",
+        "onGround": "boolean",
+        "onWall": "boolean",
+        "primaryID": "string",
         "saves": "number",
         "score": "number",
+        "shortcut": "number",
         "shots": "number",
         "speed": "number",
         "team": "number",
@@ -86,16 +110,50 @@ The websocket reports the following events in `channel:event` format:
       }
     }
   },
-  "game:match_created": "string",
-  "game:initialized": "string",
-  "game:pre_countdown_begin": "string",
-  "game:post_countdown_begin": "string",
+  "game:ball_hit": {
+    "ball": {
+      "location": {
+        "X": "number",
+        "Y": "number",
+        "Z": "number"
+      },
+      "post_hit_speed": "number",
+      "pre_hit_speed": "number"
+    },
+    "player": {
+      "id": "string",
+      "name": "string"
+    }
+  },
   "game:statfeed_event": {
-    "main_target": "string",
-    "secondary_target": "string",
+    "main_target": {
+      "id": "string",
+      "name": "string",
+      "team_num": "number"
+    },
+    "secondary_target": {
+      "id": "string",
+      "name": "string",
+      "team_num": "number"
+    },
     "type": "string"
   },
-  "game:goal_scored": "string",
+  "game:goal_scored": {
+    "ball_last_touch": {
+      "player": "string",
+      "speed": "number"
+    },
+    "goalspeed": "number",
+    "impact_location": {
+      "X": "number",
+      "Y": "number"
+    },
+    "scorer": {
+      "id": "string",
+      "name": "string",
+      "teamnum": "number"
+    }
+  },
   "game:replay_start": "string",
   "game:replay_will_end": "string",
   "game:replay_end": "string",
@@ -103,7 +161,7 @@ The websocket reports the following events in `channel:event` format:
     "winner_team_num": "number"
   },
   "game:podium_start": "string",
-  "game:replay_created": "string"
+  "game:match_destroyed": "string"
 }
 ```
 Stateless means that the event has no useful information attached. It sends a string containing the name of the event
