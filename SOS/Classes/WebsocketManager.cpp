@@ -71,22 +71,13 @@ void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
 {
     PluginServer::connection_ptr connection = ws_server->get_con_from_hdl(hdl);
     connection->append_header("Content-Type", "application/json");
-    connection->append_header("Server", "SOS/1.4.0");
+    connection->append_header("Server", "SOS/" + std::string(SOS_VERSION));
 
-    if (connection->get_resource() == "/init")
-    {
-        json::JSON data;
-        data["event"] = "init";
-        data["data"] = "json here";
+    json::JSON data;
+    data["message"] = "HTTP unsupported by SOS. Use a websocket server such as the <a href='https://gitlab.com/bakkesplugins/sos/sos-ws-relay' target='_blank'>SOS-WS-Relay</a>";
 
-        connection->set_body(data.dump());
-        connection->set_status(websocketpp::http::status_code::ok);
-
-        return;
-    }
-
-    connection->set_body("Not found");
-    connection->set_status(websocketpp::http::status_code::not_found);
+    connection->set_body(data.dump());
+    connection->set_status(websocketpp::http::status_code::ok);
 }
 
 void WebsocketManager::SendWebSocketPayload(std::string payload)
@@ -110,4 +101,14 @@ void WebsocketManager::SendWebSocketPayload(std::string payload)
     {
         cvarManager->log("An error occured sending websocket event: " + std::string(e.what()));
     }
+}
+
+void WebsocketManager::OnWsOpen(websocketpp::connection_hdl hdl) {
+    ws_connections->insert(hdl); 
+
+
+    json::JSON data;
+    data["event"] = "sos:version";
+    data["data"] = std::string(SOS_VERSION);
+    ws_server->send(hdl, data.ToString(), websocketpp::frame::opcode::text);
 }

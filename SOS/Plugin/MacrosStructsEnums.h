@@ -4,6 +4,7 @@
 extern std::shared_ptr<CVarManagerWrapper> globalCvarManager;
 
 // MACROS //
+#define SOS_VERSION "1.6.0-beta.1"
 
 #define SHOULDLOG 0
 #if SHOULDLOG

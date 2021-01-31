@@ -5,6 +5,7 @@
 #define _WEBSOCKETPP_CPP11_TYPE_TRAITS_
 #include "websocketpp/config/asio_no_tls.hpp"
 #include "websocketpp/server.hpp"
+#include <Plugin\MacrosStructsEnums.h>
 
 using websocketpp::connection_hdl;
 namespace json { class JSON; }
@@ -36,6 +37,6 @@ private:
     void OnHttpRequest(connection_hdl hdl);
     void SendWebSocketPayload(std::string payload);
     void OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg);
-    void OnWsOpen(connection_hdl hdl) { ws_connections->insert(hdl); }
+    void OnWsOpen(connection_hdl hdl);
     void OnWsClose(connection_hdl hdl) { ws_connections->erase(hdl); }
 };
