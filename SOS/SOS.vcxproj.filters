@@ -70,6 +70,9 @@
     <ClCompile Include="Plugin\SOS.cpp">
       <Filter>Plugin Code\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Plugin\DebugRenderer.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
     <ClCompile Include="Plugin\EventHooks.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>

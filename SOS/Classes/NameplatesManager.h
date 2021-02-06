@@ -1,5 +1,4 @@
 #pragma once
-
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 
 namespace json { class JSON; }

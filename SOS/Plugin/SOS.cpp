@@ -1,7 +1,6 @@
 #include "SOS.h"
 #include "SOSUtils.h"
 
-
 /*
     This is a modified version of DanMB's GameStateApi: https://github.com/DanMB/GameStateApi
     A lot of features merged in from the original SOS plugin: https://gitlab.com/bakkesplugins/sos/sos-plugin
@@ -48,6 +47,10 @@ void SOS::onLoad()
 
     //Handle all the event hooking (EventHooks.cpp)
     HookAllEvents();
+
+    //Create debug renderer boolean. Debug renderer is called in HookViewportTick
+    bEnableDebugRendering = std::make_shared<bool>(false);
+    cvarManager->registerCvar("SOS_DebugRender", "0", "Enables on-screen debug text for SOS", true).bindTo(bEnableDebugRendering);
 
     //Check if there is a game currently active
     gameWrapper->SetTimeout([this](GameWrapper* gw)

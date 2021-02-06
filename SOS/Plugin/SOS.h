@@ -24,6 +24,7 @@ private:
     std::shared_ptr<bool>  cvarUseBase64;
     std::shared_ptr<int>   cvarPort;
     std::shared_ptr<float> cvarUpdateRate;
+    std::shared_ptr<bool>  bEnableDebugRendering;
 
     // MANAGERS
     std::shared_ptr<WebsocketManager> Websocket;
@@ -36,6 +37,9 @@ private:
     bool matchCreated = false;
     bool isCurrentlySpectating = false;
     bool bInGoalReplay = false;
+    bool bInPreReplayLimbo = false;
+    bool bBallHasBeenHit = false;
+    bool bPendingRestartFromKickoff = false;
 
     // GOAL SCORED VARIABLES
     LastTouchInfo lastTouch;
@@ -56,6 +60,7 @@ private:
     void HookMatchDestroyed();
     void HookMatchEnded();
     void HookCountdownInit();
+    void HookRoundStarted();
     void HookPodiumStart();
     void HookReplayCreated();
     void HookGoalReplayStart();
@@ -67,6 +72,7 @@ private:
     void HookOnOvertimeStarted(); // Is this not needed?
     void HookOnPauseChanged();
     void HookCarBallHit(CarWrapper car, void* params);
+    void SetBallHit(bool bHit);
 
     // DATA GATHERING FUNCTIONS (GameState.cpp)
     void GetPlayerInfo(json::JSON& state, ServerWrapper server);
@@ -87,4 +93,7 @@ private:
     void DemoCounterIncrement(std::string playerId);
     int DemoCounterGetCount(std::string playerId);
 
+    // DEBUGGING HELP
+    void DebugRender(CanvasWrapper Canvas);
+    void DrawTextVector(CanvasWrapper Canvas, Vector2 StartPosition, const std::vector<DebugText>& TextVector);
 };

@@ -149,6 +149,7 @@
     <ClCompile Include="Classes\ClockManager.cpp" />
     <ClCompile Include="Classes\NameplatesManager.cpp" />
     <ClCompile Include="Classes\WebsocketManager.cpp" />
+    <ClCompile Include="Plugin\DebugRenderer.cpp" />
     <ClCompile Include="Plugin\EventHooks.cpp" />
     <ClCompile Include="Plugin\GameState.cpp" />
     <ClCompile Include="Plugin\SOS.cpp" />

@@ -2,7 +2,6 @@
 #include "SOSUtils.h"
 #include "json.hpp"
 
-
 void SOS::HookAllEvents()
 {
     using namespace std::placeholders;
@@ -12,7 +11,7 @@ void SOS::HookAllEvents()
 
     //CLOCK EVENTS
     gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.OnGameTimeUpdated", std::bind(&SOS::HookOnTimeUpdated, this));
-    gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.StartOvertime", std::bind(&SOS::HookOnOvertimeStarted, this));
+    gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.OnOvertimeUpdated", std::bind(&SOS::HookOnOvertimeStarted, this));
     gameWrapper->HookEvent("Function Engine.WorldInfo.EventPauseChanged", std::bind(&SOS::HookOnPauseChanged, this));
     gameWrapper->HookEventWithCaller<CarWrapper>("Function TAGame.Car_TA.EventHitBall", std::bind(&SOS::HookCarBallHit, this, _1, _2));
 
@@ -21,6 +20,7 @@ void SOS::HookAllEvents()
     gameWrapper->HookEvent("Function TAGame.GameInfo_Replay_TA.InitGame", std::bind(&SOS::HookReplayCreated, this));
     gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", std::bind(&SOS::HookMatchDestroyed, this));
     gameWrapper->HookEventPost("Function GameEvent_Soccar_TA.Countdown.BeginState", std::bind(&SOS::HookCountdownInit, this));
+    gameWrapper->HookEvent("Function GameEvent_Soccar_TA.Active.StartRound", std::bind(&SOS::HookRoundStarted, this));
     gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", std::bind(&SOS::HookBallExplode, this));
     gameWrapper->HookEventWithCaller<BallWrapper>("Function TAGame.Ball_TA.OnHitGoal", std::bind(&SOS::HookOnHitGoal, this, _1, _2));
     gameWrapper->HookEventPost("Function GameEvent_Soccar_TA.ReplayPlayback.BeginState", std::bind(&SOS::HookGoalReplayStart, this));
@@ -37,6 +37,7 @@ void SOS::HookViewportTick(CanvasWrapper canvas)
     if(!*cvarEnabled || !SOSUtils::ShouldRun(gameWrapper)) { return; }
 
     UpdateGameState(canvas);
+    DebugRender(canvas);
 }
 
 
@@ -44,6 +45,9 @@ void SOS::HookViewportTick(CanvasWrapper canvas)
 void SOS::HookOnTimeUpdated()
 {
     if(!*cvarEnabled || !SOSUtils::ShouldRun(gameWrapper)) { return; }
+
+    //Limit clock updating to only happen within the bounds of normal gameplay
+    if(!matchCreated || bInGoalReplay || bInPreReplayLimbo || gameWrapper->IsPaused()) { return; }
 
     //Unpauses the clock if it's paused and updates its time
     Clock->OnClockUpdated();
@@ -66,7 +70,18 @@ void SOS::HookOnPauseChanged()
     }
     else
     {
-        Clock->StartClock();
+        if(bPendingRestartFromKickoff)
+        {
+            //Admin uses "restart from kickoff"
+            //Don't start clock now. Let HookRoundStart do that
+            bPendingRestartFromKickoff = false;
+        }
+        else
+        {
+            //Admin doesn't use "restart from kickoff"
+            //PauseChanged automatically fires after the 3 second unpause countdown, no extra delay needed
+            Clock->StartClock(false);
+        }
     }
 }
 
@@ -76,11 +91,22 @@ void SOS::HookCarBallHit(CarWrapper car, void* params)
 
     if(!*cvarEnabled || !SOSUtils::ShouldRun(gameWrapper)) { return; }
 
-    //Unpauses the clock the moment someone hits the ball on kickoff
-    if(!Clock->IsClockRunning() && !bInGoalReplay)
+    SetBallHit(true);
+}
+
+void SOS::SetBallHit(bool bHit)
+{
+    //Sets bBallHasBeenHit to true and starts clock if it needs to be started (i.e. kickoff)
+    //Only run this part if the ball has not been hit yet
+    if(bHit && !bBallHasBeenHit)
     {
-        Clock->StartClock();
+        if(!Clock->IsClockRunning() && !bInGoalReplay)
+        {
+            Clock->StartClock(true);
+        }
     }
+    
+    bBallHasBeenHit = bHit;
 }
 
 
@@ -141,6 +167,7 @@ void SOS::HookMatchDestroyed()
     matchCreated = false;
     firstCountdownHit = false;
     isCurrentlySpectating = false;
+    bPendingRestartFromKickoff = false;
     Clock->ResetClock();
     DemolitionCountMap.clear();
 
@@ -149,6 +176,13 @@ void SOS::HookMatchDestroyed()
 
 void SOS::HookCountdownInit()
 {
+    //When match admin resets from kickoff, the new countdown starts but it starts paused
+    //It will continue when admin unpauses
+    if(gameWrapper->IsPaused())
+    {
+        bPendingRestartFromKickoff = true;
+    }
+
     if (!firstCountdownHit && SOSUtils::ShouldRun(gameWrapper))
     {
         firstCountdownHit = true;
@@ -157,6 +191,22 @@ void SOS::HookCountdownInit()
 
     Websocket->SendEvent("game:pre_countdown_begin", "pre_game_countdown_begin");
     Websocket->SendEvent("game:post_countdown_begin", "post_game_countdown_begin");
+}
+
+void SOS::HookRoundStarted()
+{
+    bPendingRestartFromKickoff = false;
+
+    if(!*cvarEnabled || !SOSUtils::ShouldRun(gameWrapper)) { return; }
+    
+    //Mark the ball as unhit for the kickoff
+    SetBallHit(false);
+
+    //Set the delay for the timer to start if the ball hasn't been hit yet
+    //Default delay in game is 5 seconds
+    gameWrapper->SetTimeout(std::bind(&SOS::SetBallHit, this, true), 5.f);
+
+    Websocket->SendEvent("game:round_started_go", "game_round_started_go");
 }
 
 void SOS::HookBallExplode()
@@ -172,6 +222,10 @@ void SOS::HookBallExplode()
         LOGC("Sending ReplayWillEnd Event");
         Websocket->SendEvent("game:replay_will_end", "game_replay_will_end");
     }
+    else
+    {
+        bInPreReplayLimbo = true;
+    }
 }
 
 void SOS::HookOnHitGoal(BallWrapper ball, void* params)
@@ -185,6 +239,7 @@ void SOS::HookOnHitGoal(BallWrapper ball, void* params)
 void SOS::HookGoalReplayStart()
 {
     bInGoalReplay = true;
+    bInPreReplayLimbo = false;
     Websocket->SendEvent("game:replay_start", "game_replay_start");
 }
 
@@ -200,6 +255,7 @@ void SOS::HookMatchEnded()
     matchCreated = false;
     firstCountdownHit = false;
     isCurrentlySpectating = false;
+    bPendingRestartFromKickoff = false;
     Clock->ResetClock();
 
     json::JSON winnerData;

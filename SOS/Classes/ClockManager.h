@@ -1,5 +1,4 @@
 #pragma once
-
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 
 class ClockManager
@@ -7,7 +6,7 @@ class ClockManager
 public:
     ClockManager(std::shared_ptr<GameWrapper> InGameWrapper);
 
-    void StartClock();
+    void StartClock(bool bResetAggregate);
     void StopClock();
     bool IsClockRunning() { return bActive; }
 

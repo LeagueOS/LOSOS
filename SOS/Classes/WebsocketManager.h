@@ -5,7 +5,7 @@
 #define _WEBSOCKETPP_CPP11_TYPE_TRAITS_
 #include "websocketpp/config/asio_no_tls.hpp"
 #include "websocketpp/server.hpp"
-#include <Plugin\MacrosStructsEnums.h>
+#include "Plugin/MacrosStructsEnums.h"
 
 using websocketpp::connection_hdl;
 namespace json { class JSON; }

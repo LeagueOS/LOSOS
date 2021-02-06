@@ -4,7 +4,7 @@
 ClockManager::ClockManager(std::shared_ptr<GameWrapper> InGameWrapper)
     : gameWrapper(InGameWrapper) {}
 
-void ClockManager::StartClock()
+void ClockManager::StartClock(bool bResetAggregate)
 {
     //When overtime starts OnTimeUpdated is called, but we don't want the clock starting then
     if(bOvertimeStarted)
@@ -23,7 +23,7 @@ void ClockManager::StartClock()
     bActive = true;
 
     //Get the first delta time when clock starts
-    GetTime(true);
+    GetTime(bResetAggregate);
 }
 
 void ClockManager::StopClock()
@@ -42,7 +42,7 @@ void ClockManager::OnClockUpdated()
 {
     if(!bActive)
     {
-        StartClock();
+        StartClock(true);
     }
 
     ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
@@ -85,25 +85,29 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
     {
         bIsOvertime = Server.GetbOverTime();
         bIsUnlimitedTime = Server.GetbUnlimitedTime();
+        ReadClockTime = Server.GetSecondsRemaining();
     }
 
     //Calculate the current time value
     float OutputTime = 0.f;
     if(bIsOvertime || bIsUnlimitedTime)
     {
-        OutputTime = static_cast<float>(ReadClockTime) + DeltaAggregate;
+        //In-game already rounds up one second, so clock will be off. Noticeable on first touch in overtime
+        OutputTime = static_cast<float>(ReadClockTime) + DeltaAggregate - 1.f;
     }
     else
     {
         OutputTime = static_cast<float>(ReadClockTime) - DeltaAggregate;
     }
 
+    //Clamp to 0, don't allow negative numbers
+    OutputTime = max(OutputTime, 0);
+
     return OutputTime;
 }
 
 void ClockManager::OnOvertimeStarted()
 {
-    StopClock();
     ResetClock();
     bOvertimeStarted = true;
 }

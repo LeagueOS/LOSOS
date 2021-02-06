@@ -1,5 +1,4 @@
 #pragma once
-
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "MacrosStructsEnums.h"
 
