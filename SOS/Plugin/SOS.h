@@ -19,6 +19,8 @@ public:
     void onUnload() override;
 
 private:
+    std::string currentMatchGuid = "";
+
     // CVARS
     std::shared_ptr<bool>  cvarEnabled;
     std::shared_ptr<bool>  cvarUseBase64;

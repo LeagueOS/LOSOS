@@ -12,6 +12,7 @@ void SOS::UpdateGameState(CanvasWrapper canvas)
     state["event"] = "gamestate";
     state["players"] = json::Object();
     state["game"] = json::Object();
+    state["match_guid"] = currentMatchGuid;
 
     //Might want to change this to take MatchCreated into account?
     state["hasGame"] = true;
@@ -316,6 +317,7 @@ void SOS::GetNameplateInfo(CanvasWrapper canvas)
 
     //Create nameplates JSON object
     json::JSON nameplatesState;
+    nameplatesState["match_guid"] = currentMatchGuid;
     nameplatesState["nameplates"] = json::Object();
     
     //Get nameplate info and send through websocket
@@ -362,6 +364,7 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
 
     //Build ball touch event
     json::JSON ballTouchEvent;
+    ballTouchEvent["match_guid"] = currentMatchGuid;
     ballTouchEvent["player"]["name"] = playerName;
     ballTouchEvent["player"]["id"] = playerID;
     ballTouchEvent["ball"]["pre_hit_speed"] = BallSpeed->GetCachedBallSpeed();
@@ -372,8 +375,10 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
     //Set values. Speed is delayed by 1 tick so it can get the new speed accurately
     lastTouch.playerID = playerID;
 
-    gameWrapper->SetTimeout([this, ballTouchEvent](GameWrapper*) mutable
+    gameWrapper->SetTimeout([this, CastParams, ballTouchEvent](GameWrapper*) mutable
     {
+        GetCurrentBallSpeed();
+        BallWrapper bw = CastParams->Ball;
         lastTouch.speed = BallSpeed->GetCachedBallSpeed();
         ballTouchEvent["ball"]["post_hit_speed"] = BallSpeed->GetCachedBallSpeed();
         Websocket->SendEvent("game:ball_hit", ballTouchEvent);
@@ -425,6 +430,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
 
     //General statfeed event
     json::JSON statfeed;
+    statfeed["match_guid"] = currentMatchGuid;
     statfeed["type"] = eventStr;
     statfeed["main_target"]["name"] = receiverName;
     statfeed["main_target"]["id"] = receiverID;
@@ -438,6 +444,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     if (eventStr == "Goal")
     {
         json::JSON goalScoreData;
+        goalScoreData["match_guid"] = currentMatchGuid;
         goalScoreData["goalspeed"] = BallSpeed->GetCachedBallSpeed();
         goalScoreData["impact_location"]["X"] = GoalImpactLocation.X;
         goalScoreData["impact_location"]["Y"] = GoalImpactLocation.Y;

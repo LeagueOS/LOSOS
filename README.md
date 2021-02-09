@@ -4,15 +4,6 @@ SOS-Plugin aims to provide an easy to use event relay in use for Esports broadca
 Want some real life examples? Check out the `Codename: COVERT` assets:
 https://gitlab.com/bakkesplugins/sos/codename-covert
 
-**SOS has been used by the following productions**
-- Codename: COVERT by iDazerin
-- Disconnect's 3v3 monthly tournaments
-- GoldRushGG
-- Minor League Esports
-- Women's Car Ball Championships by CrimsonWings
-- Rocket Baguette
-- And many more!
-
 ## BakkesMod SDK Setup
 The solution contains $(BAKKESMODSDK) environment variable references for the SDK. Create your own environment variable (use Google) point to the SDK base and the configuration will handle the rest
 
