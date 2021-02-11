@@ -4,7 +4,7 @@
 #include "Plugin/MacrosStructsEnums.h"
 #include "Plugin/SOSUtils.h"
 
-void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json::JSON& nameplatesState)
+void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json& nameplatesState)
 {
     RT::Frustum frustum = RT::Frustum(canvas, camera);
     
@@ -45,7 +45,7 @@ void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper cam
     }
 }
 
-void NameplatesManager::GetIndividualNameplate(CanvasWrapper canvas, CameraWrapper camera, RT::Frustum &frustum, CarWrapper car, json::JSON& nameplatesState)
+void NameplatesManager::GetIndividualNameplate(CanvasWrapper canvas, CameraWrapper camera, RT::Frustum &frustum, CarWrapper car, json& nameplatesState)
 {
     std::string name, id;
     SOSUtils::GetNameAndID(car.GetPRI(), name, id);

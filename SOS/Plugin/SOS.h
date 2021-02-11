@@ -7,9 +7,9 @@
 #include "Classes/ClockManager.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "MacrosStructsEnums.h"
+#include <json.hpp>
 
-// FORWARD DECLARATIONS
-namespace json { class JSON; }
+using json = nlohmann::json;
 
 // SOS CLASS
 class SOS : public BakkesMod::Plugin::BakkesModPlugin
@@ -46,11 +46,12 @@ private:
     // GOAL SCORED VARIABLES
     LastTouchInfo lastTouch;
     Vector2F GoalImpactLocation = {0,0}; // top-left (0,0) bottom right (1,1)
+	void GetGameStateInfo(CanvasWrapper canvas, json& state);
     Vector2F GetGoalImpactLocation(BallWrapper ball, void* params);
 
     // MAIN FUNCTION (GameState.cpp)
     void UpdateGameState(CanvasWrapper canvas);
-    void GetGameStateInfo(CanvasWrapper canvas, json::JSON& state);
+    //void GetGameStateInfo(CanvasWrapper canvas, json& state);
 
     // HOOKS (EventHooks.cpp)
     void HookAllEvents();
@@ -77,15 +78,15 @@ private:
     void SetBallHit(bool bHit);
 
     // DATA GATHERING FUNCTIONS (GameState.cpp)
-    void GetPlayerInfo(json::JSON& state, ServerWrapper server);
-    void GetIndividualPlayerInfo(json::JSON& state, PriWrapper pri);
-    void GetTeamInfo(json::JSON& state, ServerWrapper server);
-    void GetGameTimeInfo(json::JSON& state, ServerWrapper server);
-    void GetBallInfo(json::JSON& state, ServerWrapper server);
+    void GetPlayerInfo(json& state, ServerWrapper server);
+    void GetIndividualPlayerInfo(json& state, PriWrapper pri);
+    void GetTeamInfo(json& state, ServerWrapper server);
+    void GetGameTimeInfo(json& state, ServerWrapper server);
+    void GetBallInfo(json& state, ServerWrapper server);
     void GetCurrentBallSpeed();
-    void GetWinnerInfo(json::JSON& state, ServerWrapper server);
-    void GetArenaInfo(json::JSON& state);
-    void GetCameraInfo(json::JSON& state);
+    void GetWinnerInfo(json& state, ServerWrapper server);
+    void GetArenaInfo(json& state);
+    void GetCameraInfo(json& state);
     void GetNameplateInfo(CanvasWrapper canvas);
     void GetLastTouchInfo(CarWrapper car, void* params);
     void GetStatEventInfo(ServerWrapper caller, void* params);

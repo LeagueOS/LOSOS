@@ -1,19 +1,20 @@
 #include "WebsocketManager.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
-#include "json.hpp"
+#include <json.hpp>
 #include "utils/parser.h"
 
+using nlohmann::json;
 
 // PUBLIC FUNCTIONS //
 WebsocketManager::WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort)
     : cvarManager(InCvarManager), ListenPort(InListenPort) {}
 
-void WebsocketManager::SendEvent(std::string eventName, const json::JSON &jsawn)
+void WebsocketManager::SendEvent(std::string eventName, const json &jsawn)
 {
-    json::JSON event;
+    json event;
     event["event"] = eventName;
     event["data"] = jsawn;
-    SendWebSocketPayload(event.dump());
+    SendWebSocketPayload(DumpMessage(event));
 }
 
 void WebsocketManager::StartServer()
@@ -73,10 +74,10 @@ void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
     connection->append_header("Content-Type", "application/json");
     connection->append_header("Server", "SOS/" + std::string(SOS_VERSION));
 
-    json::JSON data;
+    json data;
     data["message"] = "HTTP unsupported by SOS. Use a websocket server such as the <a href='https://gitlab.com/bakkesplugins/sos/sos-ws-relay' target='_blank'>SOS-WS-Relay</a>";
 
-    connection->set_body(data.dump());
+    connection->set_body(DumpMessage(data));
     connection->set_status(websocketpp::http::status_code::ok);
 }
 
@@ -106,8 +107,13 @@ void WebsocketManager::SendWebSocketPayload(std::string payload)
 void WebsocketManager::OnWsOpen(websocketpp::connection_hdl hdl) {
     ws_connections->insert(hdl); 
 
-    json::JSON data;
+    json data;
     data["event"] = "sos:version";
     data["data"] = std::string(SOS_VERSION);
-    ws_server->send(hdl, data.dump(), websocketpp::frame::opcode::text);
+    ws_server->send(hdl, DumpMessage(data), websocketpp::frame::opcode::text);
+}
+
+json::string_t WebsocketManager::DumpMessage(json jsonData)
+{
+    return jsonData.dump(-1, ' ', false, nlohmann::detail::error_handler_t::replace);
 }

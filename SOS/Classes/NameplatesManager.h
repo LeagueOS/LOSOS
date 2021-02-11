@@ -1,13 +1,14 @@
 #pragma once
+#include <json.hpp>
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 
-namespace json { class JSON; }
+using nlohmann::json;
 namespace RT { class Frustum; }
 
 class NameplatesManager
 {
 public:
-    void GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json::JSON& nameplatesState);
+    void GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json& nameplatesState);
 
 private:
     //FOV: Anything above 90 degrees remains at 1.0
@@ -16,6 +17,6 @@ private:
 	const float FOVMax = 1.0f; //90 degrees
 	const float distMin = 0.5f; //0 centimeters
 	const float distMax = 9.0f; //10,000 centimeters
-    void GetIndividualNameplate(CanvasWrapper canvas, CameraWrapper camera, RT::Frustum &frustum, CarWrapper car, json::JSON& nameplatesState);
+    void GetIndividualNameplate(CanvasWrapper canvas, CameraWrapper camera, RT::Frustum &frustum, CarWrapper car, json& nameplatesState);
     float GetBallVerticalRadius(CanvasWrapper canvas, BallWrapper ball, CameraWrapper camera, RT::Frustum &frustum);
 };

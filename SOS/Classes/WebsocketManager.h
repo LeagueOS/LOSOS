@@ -6,9 +6,10 @@
 #include "websocketpp/config/asio_no_tls.hpp"
 #include "websocketpp/server.hpp"
 #include "Plugin/MacrosStructsEnums.h"
+#include <json.hpp>
 
 using websocketpp::connection_hdl;
-namespace json { class JSON; }
+using nlohmann::json;
 class CVarManagerWrapper;
 
 class WebsocketManager
@@ -22,7 +23,7 @@ public:
     void StartServer();
     void StopServer();
     
-    void SendEvent(std::string eventName, const json::JSON& jsawn);
+    void SendEvent(std::string eventName, const json& jsawn);
     void SetbUseBase64(bool bNewValue) { bUseBase64 = bNewValue; }
 
 private:
@@ -39,4 +40,6 @@ private:
     void OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg);
     void OnWsOpen(connection_hdl hdl);
     void OnWsClose(connection_hdl hdl) { ws_connections->erase(hdl); }
+
+    json::string_t DumpMessage(json jon);
 };

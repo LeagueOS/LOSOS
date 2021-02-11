@@ -1,17 +1,19 @@
 #include "SOS.h"
 #include "SOSUtils.h"
-#include "json.hpp"
+#include <json.hpp>
 #include "RenderingTools.h"
 #include "utils/parser.h"
 #include "bakkesmod/wrappers/GameObject/Stats/StatEventWrapper.h"
 
+using json = nlohmann::json;
+
 void SOS::UpdateGameState(CanvasWrapper canvas)
 {
     //Initialize JSON objects
-    json::JSON state;
+    json state;
     state["event"] = "gamestate";
-    state["players"] = json::Object();
-    state["game"] = json::Object();
+    state["players"] = json::object();
+    state["game"] = json::object();
     state["match_guid"] = currentMatchGuid;
 
     //Might want to change this to take MatchCreated into account?
@@ -20,7 +22,7 @@ void SOS::UpdateGameState(CanvasWrapper canvas)
     GetGameStateInfo(canvas, state);
 }
 
-void SOS::GetGameStateInfo(CanvasWrapper canvas, json::JSON& state)
+void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
 {
     using namespace std::chrono;
 
@@ -63,7 +65,7 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json::JSON& state)
     }
 }
 
-void SOS::GetPlayerInfo(json::JSON& state, ServerWrapper server)
+void SOS::GetPlayerInfo(json& state, ServerWrapper server)
 {
     ArrayWrapper<PriWrapper> PRIs = server.GetPRIs();
     for (int i = 0; i < PRIs.Count(); ++i)
@@ -75,12 +77,12 @@ void SOS::GetPlayerInfo(json::JSON& state, ServerWrapper server)
     }
 }
 
-void SOS::GetIndividualPlayerInfo(json::JSON& state, PriWrapper pri)
+void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
 {
     std::string name, id;
     SOSUtils::GetNameAndID(pri, name, id);
 
-    state["players"][id] = json::Object();
+    state["players"][id] = json::object();
 
     state["players"][id]["name"] = name;
     state["players"][id]["id"] = id;
@@ -156,7 +158,7 @@ void SOS::GetIndividualPlayerInfo(json::JSON& state, PriWrapper pri)
     state["players"][id]["isSonic"] = car.GetbSuperSonic() ? true : false;
 }
 
-void SOS::GetTeamInfo(json::JSON& state, ServerWrapper server)
+void SOS::GetTeamInfo(json& state, ServerWrapper server)
 {
     //Not enough teams
     if (server.GetTeams().Count() != 2)
@@ -205,7 +207,7 @@ void SOS::GetTeamInfo(json::JSON& state, ServerWrapper server)
     }
 }
 
-void SOS::GetGameTimeInfo(json::JSON& state, ServerWrapper server)
+void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
 {
     float OutputTime = !firstCountdownHit ? 300.f : Clock->GetTime();
 
@@ -221,7 +223,7 @@ void SOS::GetGameTimeInfo(json::JSON& state, ServerWrapper server)
     LOGC(std::to_string(OutputTime));
 }
 
-void SOS::GetBallInfo(json::JSON& state, ServerWrapper server)
+void SOS::GetBallInfo(json& state, ServerWrapper server)
 {
     BallWrapper ball = server.GetBall();
 
@@ -246,7 +248,7 @@ void SOS::GetBallInfo(json::JSON& state, ServerWrapper server)
 	state["game"]["ball"]["location"]["Z"] = ballLocation.Z;
 }
 
-void SOS::GetWinnerInfo(json::JSON& state, ServerWrapper server)
+void SOS::GetWinnerInfo(json& state, ServerWrapper server)
 {
     TeamWrapper winner = server.GetGameWinner();
 
@@ -263,12 +265,12 @@ void SOS::GetWinnerInfo(json::JSON& state, ServerWrapper server)
     state["game"]["winner"] = winner.GetCustomTeamName().IsNull() ? "" : winner.GetCustomTeamName().ToString();
 }
 
-void SOS::GetArenaInfo(json::JSON& state)
+void SOS::GetArenaInfo(json& state)
 {
     state["game"]["arena"] = gameWrapper->GetCurrentMap();
 }
 
-void SOS::GetCameraInfo(json::JSON& state)
+void SOS::GetCameraInfo(json& state)
 {
     CameraWrapper cam = gameWrapper->GetCamera();
 
@@ -316,9 +318,9 @@ void SOS::GetNameplateInfo(CanvasWrapper canvas)
     if(server.IsNull()) { return; }
 
     //Create nameplates JSON object
-    json::JSON nameplatesState;
+    json nameplatesState;
     nameplatesState["match_guid"] = currentMatchGuid;
-    nameplatesState["nameplates"] = json::Object();
+    nameplatesState["nameplates"] = json::object();
     
     //Get nameplate info and send through websocket
     Nameplates->GetNameplateInfo(canvas, camera, server, nameplatesState);
@@ -363,7 +365,7 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
     SOSUtils::GetNameAndID(PRI, playerName, playerID);
 
     //Build ball touch event
-    json::JSON ballTouchEvent;
+    json ballTouchEvent;
     ballTouchEvent["match_guid"] = currentMatchGuid;
     ballTouchEvent["player"]["name"] = playerName;
     ballTouchEvent["player"]["id"] = playerID;
@@ -429,7 +431,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
    
 
     //General statfeed event
-    json::JSON statfeed;
+    json statfeed;
     statfeed["match_guid"] = currentMatchGuid;
     statfeed["type"] = eventStr;
     statfeed["main_target"]["name"] = receiverName;
@@ -443,7 +445,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     //Goal statfeed event
     if (eventStr == "Goal")
     {
-        json::JSON goalScoreData;
+        json goalScoreData;
         goalScoreData["match_guid"] = currentMatchGuid;
         goalScoreData["goalspeed"] = BallSpeed->GetCachedBallSpeed();
         goalScoreData["impact_location"]["X"] = GoalImpactLocation.X;
