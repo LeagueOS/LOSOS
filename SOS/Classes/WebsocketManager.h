@@ -36,7 +36,7 @@ private:
     ConnectionSet* ws_connections = nullptr;
 
     void OnHttpRequest(connection_hdl hdl);
-    void SendWebSocketPayload(std::string payload);
+    void SendWebSocketPayload(const json &jsawn);
     void OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg);
     void OnWsOpen(connection_hdl hdl);
     void OnWsClose(connection_hdl hdl) { ws_connections->erase(hdl); }

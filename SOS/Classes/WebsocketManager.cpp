@@ -14,7 +14,7 @@ void WebsocketManager::SendEvent(std::string eventName, const json &jsawn)
     json event;
     event["event"] = eventName;
     event["data"] = jsawn;
-    SendWebSocketPayload(DumpMessage(event));
+    SendWebSocketPayload(event);
 }
 
 void WebsocketManager::StartServer()
@@ -65,7 +65,7 @@ void WebsocketManager::StopServer()
 // PRIVATE FUNCTIONS //
 void WebsocketManager::OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg)
 {
-    SendWebSocketPayload(msg->get_payload());
+    //SendWebSocketPayload(msg->get_payload());
 }
 
 void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
@@ -81,21 +81,21 @@ void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
     connection->set_status(websocketpp::http::status_code::ok);
 }
 
-void WebsocketManager::SendWebSocketPayload(std::string payload)
+void WebsocketManager::SendWebSocketPayload(const json &jsawn)
 {
     // broadcast to all connections
     try
     {
-        std::string output = payload;
-
-        if (bUseBase64)
-        {
-            output = base64_encode((const unsigned char*)payload.c_str(), (unsigned int)payload.size());
-        }
+        //std::string output = payload;
+        //
+        //if (bUseBase64)
+        //{
+        //    output = base64_encode((const unsigned char*)payload.c_str(), (unsigned int)payload.size());
+        //}
 
         for (const connection_hdl& it : *ws_connections)
         {
-            ws_server->send(it, output, websocketpp::frame::opcode::text);
+            ws_server->send(it, DumpMessage(jsawn), websocketpp::frame::opcode::text);
         }
     }
     catch (std::exception e)
