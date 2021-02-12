@@ -155,14 +155,8 @@ The websocket reports the following events in `channel:event` format:
   "game:match_destroyed": "string"
 }
 ```
-Stateless means that the event has no useful information attached. It sends a string containing the name of the event
 
 ## Libraries Required
 
 The following libraries can be retrieved from this submodule:
 https://gitlab.com/bakkesplugins/sos/sos-plugin-includes
-
-- websocketpp 0.8.1 https://github.com/zaphoyd/websocketpp
-- asio https://think-async.com/Asio/
-- SimpleJson https://github.com/nbsdx/SimpleJSON
-- RenderingTools https://github.com/CinderBlocc/RenderingTools
