@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;BAKKESTEST_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\SimpleJSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\nlohmann-JSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -85,7 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>USE_NAMEPLATES;NDEBUG;BAKKESTEST_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\SimpleJSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\nlohmann-JSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
