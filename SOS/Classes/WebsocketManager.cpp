@@ -1,6 +1,6 @@
 #include "WebsocketManager.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
-#include <json.hpp>
+#include "json.hpp"
 #include "utils/parser.h"
 
 using nlohmann::json;

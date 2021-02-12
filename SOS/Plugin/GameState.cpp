@@ -1,6 +1,6 @@
 #include "SOS.h"
 #include "SOSUtils.h"
-#include <json.hpp>
+#include "json.hpp"
 #include "RenderingTools.h"
 #include "utils/parser.h"
 #include "bakkesmod/wrappers/GameObject/Stats/StatEventWrapper.h"

@@ -7,7 +7,7 @@
 #include "Classes/ClockManager.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "MacrosStructsEnums.h"
-#include <json.hpp>
+#include "json.hpp"
 
 using json = nlohmann::json;
 
