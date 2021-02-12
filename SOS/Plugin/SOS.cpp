@@ -27,23 +27,11 @@ void SOS::onLoad()
         if(!*cvarEnabled) { Clock->ResetClock(); }
     });
     
-    //Use Base64 cvar
-    cvarUseBase64 = std::make_shared<bool>(false);
-    CVarWrapper useBase64Cvar = cvarManager->registerCvar("SOS_use_base64", "0", "Use base64 encoding to send websocket info (useful for non ASCII characters)", true, true, 0, true, 1);
-    useBase64Cvar.bindTo(cvarUseBase64);
-    useBase64Cvar.addOnValueChanged([this](std::string cvarName, CVarWrapper newCvar)
-    {
-        Websocket->SetbUseBase64(*cvarUseBase64);
-    });
-    
     //Other cvars
     cvarPort = std::make_shared<int>(49122);
     cvarUpdateRate = std::make_shared<float>(100.0f);
     cvarManager->registerCvar("SOS_Port", "49122", "Websocket port for SOS overlay plugin", true).bindTo(cvarPort);
     cvarManager->registerCvar("SOS_state_flush_rate", "100", "Rate at which to send events to websocket (milliseconds)", true, true, 5.0f, true, 2000.0f).bindTo(cvarUpdateRate);
-
-    //Notifiers
-    cvarManager->registerNotifier("SOS_c_reset_internal_state", [this](std::vector<std::string> params) { HookMatchEnded(); }, "Reset internal state", PERMISSION_ALL);
 
     //Handle all the event hooking (EventHooks.cpp)
     HookAllEvents();

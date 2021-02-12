@@ -86,13 +86,6 @@ void WebsocketManager::SendWebSocketPayload(const json &jsawn)
     // broadcast to all connections
     try
     {
-        //std::string output = payload;
-        //
-        //if (bUseBase64)
-        //{
-        //    output = base64_encode((const unsigned char*)payload.c_str(), (unsigned int)payload.size());
-        //}
-
         for (const connection_hdl& it : *ws_connections)
         {
             ws_server->send(it, DumpMessage(jsawn), websocketpp::frame::opcode::text);

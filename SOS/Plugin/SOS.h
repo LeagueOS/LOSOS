@@ -23,7 +23,6 @@ private:
 
     // CVARS
     std::shared_ptr<bool>  cvarEnabled;
-    std::shared_ptr<bool>  cvarUseBase64;
     std::shared_ptr<int>   cvarPort;
     std::shared_ptr<float> cvarUpdateRate;
     std::shared_ptr<bool>  bEnableDebugRendering;
