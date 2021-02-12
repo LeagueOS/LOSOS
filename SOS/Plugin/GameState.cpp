@@ -468,8 +468,7 @@ void SOS::DemoCounterIncrement(std::string playerId)
 {
     if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
         DemolitionCountMap[playerId] = 1;
-    }
-    else {
+    } else {
         DemolitionCountMap[playerId]++;
     }
 }
@@ -478,8 +477,7 @@ int SOS::DemoCounterGetCount(std::string playerId)
 {
     if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
         return 0;
-    }
-    else {
+    } else {
         return DemolitionCountMap[playerId];
     }
 }
