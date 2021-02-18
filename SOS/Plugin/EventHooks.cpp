@@ -28,6 +28,7 @@ void SOS::HookAllEvents()
     gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.EventMatchEnded", std::bind(&SOS::HookMatchEnded, this));
     gameWrapper->HookEventPost("Function GameEvent_Soccar_TA.PodiumSpotlight.BeginState", std::bind(&SOS::HookPodiumStart, this));
     gameWrapper->HookEventWithCaller<ServerWrapper>("Function TAGame.PRI_TA.ClientNotifyStatTickerMessage", std::bind(&SOS::HookStatEvent, this, _1, _2));
+    gameWrapper->HookEventWithCallerPost<ActorWrapper>("Function TAGame.ReplayDirector_TA.OnScoreDataChanged", std::bind(&SOS::HookReplayScoreDataChanged, this, _1));
 }
 
 
@@ -309,4 +310,35 @@ void SOS::HookPodiumStart()
 void SOS::HookStatEvent(ServerWrapper caller, void* params)
 {
     GetStatEventInfo(caller, params);
+}
+
+void SOS::HookReplayScoreDataChanged(ActorWrapper caller)
+{
+    ReplayDirectorWrapper RDW(caller.memory_address);
+    ReplayScoreData ScoreData = RDW.GetReplayScoreData();
+
+    //If ScoredBy is null, that likely means this call was just to reset values
+    if(ScoreData.ScoredBy == 0) { return; }
+
+    PriWrapper ScoredBy(ScoreData.ScoredBy);
+    std::string ScorerName, ScorerID;
+    SOSUtils::GetNameAndID(ScoredBy, ScorerName, ScorerID);
+
+    PriWrapper AssistedBy(ScoreData.AssistedBy);
+    std::string AssisterName, AssisterID;
+    SOSUtils::GetNameAndID(ScoredBy, AssisterName, AssisterID);
+
+    json::JSON goalScoreData;
+    goalScoreData["goalspeed"] = SOSUtils::ToKPH(ScoreData.Speed);
+    goalScoreData["goaltime"] = ScoreData.Time;
+    goalScoreData["impact_location"]["X"] = GoalImpactLocation.X; // Set in HookOnHitGoal
+    goalScoreData["impact_location"]["Y"] = GoalImpactLocation.Y; // Set in HookOnHitGoal
+    goalScoreData["scorer"]["name"] = ScorerName;
+    goalScoreData["scorer"]["id"] = ScorerID;
+    goalScoreData["scorer"]["teamnum"] = ScoreData.ScoreTeam;
+    goalScoreData["assister"]["name"] = AssisterName;
+    goalScoreData["assister"]["id"] = AssisterID;
+    goalScoreData["ball_last_touch"]["player"] = lastTouch.playerID; // Set in HookCarBallHit
+    goalScoreData["ball_last_touch"]["speed"] = lastTouch.speed;     // Set in HookCarBallHit
+    Websocket->SendEvent("game:goal_scored", goalScoreData);
 }
