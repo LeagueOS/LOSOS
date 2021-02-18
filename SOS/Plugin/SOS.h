@@ -68,6 +68,7 @@ private:
     void HookGoalReplayStart();
     void HookGoalReplayEnd();
     void HookStatEvent(ServerWrapper caller, void* params);
+    void HookReplayScoreDataChanged(ActorWrapper caller);
 
     // TIME HOOKS
     void HookOnTimeUpdated();

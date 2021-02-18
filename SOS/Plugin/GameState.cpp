@@ -442,21 +442,6 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     statfeed["secondary_target"]["team_num"] = victim.IsNull() ? -1 : victim.GetTeamNum();
     Websocket->SendEvent("game:statfeed_event", statfeed);
 
-    //Goal statfeed event
-    if (eventStr == "Goal")
-    {
-        json goalScoreData;
-        goalScoreData["match_guid"] = currentMatchGuid;
-        goalScoreData["goalspeed"] = BallSpeed->GetCachedBallSpeed();
-        goalScoreData["impact_location"]["X"] = GoalImpactLocation.X;
-        goalScoreData["impact_location"]["Y"] = GoalImpactLocation.Y;
-        goalScoreData["scorer"]["name"] = receiverName;
-        goalScoreData["scorer"]["id"] = receiverID;
-        goalScoreData["scorer"]["teamnum"] = receiver.IsNull() ? -1 : receiver.GetTeamNum();
-        goalScoreData["ball_last_touch"]["player"] = lastTouch.playerID;
-        goalScoreData["ball_last_touch"]["speed"] = lastTouch.speed;
-        Websocket->SendEvent("game:goal_scored", goalScoreData);
-    }
     //Demolition event
     if (eventStr == "Demolition")
     {
