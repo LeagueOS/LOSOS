@@ -326,9 +326,9 @@ void SOS::HookReplayScoreDataChanged(ActorWrapper caller)
 
     PriWrapper AssistedBy(ScoreData.AssistedBy);
     std::string AssisterName, AssisterID;
-    SOSUtils::GetNameAndID(ScoredBy, AssisterName, AssisterID);
+    SOSUtils::GetNameAndID(AssistedBy, AssisterName, AssisterID);
 
-    json::JSON goalScoreData;
+    json goalScoreData;
     goalScoreData["goalspeed"] = SOSUtils::ToKPH(ScoreData.Speed);
     goalScoreData["goaltime"] = ScoreData.Time;
     goalScoreData["impact_location"]["X"] = GoalImpactLocation.X; // Set in HookOnHitGoal
