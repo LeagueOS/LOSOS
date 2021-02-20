@@ -174,6 +174,7 @@ void SOS::HookReplayCreated()
 void SOS::HookMatchDestroyed()
 {
     bInGoalReplay = false;
+    bInPreReplayLimbo = false;
     matchCreated = false;
     firstCountdownHit = false;
     isCurrentlySpectating = false;
@@ -279,6 +280,7 @@ void SOS::HookGoalReplayEnd()
 void SOS::HookMatchEnded()
 {
     bInGoalReplay = false;
+    bInPreReplayLimbo = false;
     matchCreated = false;
     firstCountdownHit = false;
     isCurrentlySpectating = false;

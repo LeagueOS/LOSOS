@@ -98,7 +98,13 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
     {
         bIsOvertime = Server.GetbOverTime();
         bIsUnlimitedTime = Server.GetbUnlimitedTime();
-        ReadClockTime = Server.GetSecondsRemaining();
+        int NewReadClockTime = Server.GetSecondsRemaining();
+        if(ReadClockTime != NewReadClockTime)
+        {
+            //In case somehow OnClockUpdated isn't being called, reset the aggregate here when the time changes
+            DeltaAggregate = 0.f;
+            ReadClockTime = NewReadClockTime;
+        }
     }
 
     //Calculate the current time value

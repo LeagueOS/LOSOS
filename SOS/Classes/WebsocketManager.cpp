@@ -109,6 +109,6 @@ void WebsocketManager::OnWsOpen(websocketpp::connection_hdl hdl) {
 json::string_t WebsocketManager::DumpMessage(json jsonData)
 {
     json::string_t Output = jsonData.dump(-1, ' ', false, nlohmann::detail::error_handler_t::replace);
-    cvarManager->log(Output);
+    //cvarManager->log(Output);
     return Output;
 }
