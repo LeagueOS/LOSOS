@@ -1,10 +1,12 @@
 #pragma once
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 
+class WebsocketManager;
+
 class ClockManager
 {
 public:
-    ClockManager(std::shared_ptr<GameWrapper> InGameWrapper);
+    ClockManager(std::shared_ptr<GameWrapper> InGameWrapper, std::shared_ptr<WebsocketManager> InWebsocketManager);
 
     void StartClock(bool bResetAggregate);
     void StopClock();
@@ -21,6 +23,7 @@ private:
     ClockManager() = delete; // No default constructor
 
     std::shared_ptr<GameWrapper> gameWrapper;
+    std::shared_ptr<WebsocketManager> Websocket;
 
     bool bActive = false;
     bool bIsOvertime = false;

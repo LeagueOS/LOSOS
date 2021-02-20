@@ -221,6 +221,8 @@ void SOS::HookRoundStarted()
     //Default delay in game is 5 seconds
     gameWrapper->SetTimeout(std::bind(&SOS::SetBallHit, this, true), 5.f);
 
+    json event;
+    event["match_guid"] = currentMatchGuid;
     Websocket->SendEvent("game:round_started_go", "game_round_started_go");
 }
 

@@ -50,9 +50,9 @@ void SOS::onLoad()
     }, 1.f);
 
     //Create managers
-    BallSpeed  = std::make_shared<BallSpeedManager>(gameWrapper);
-    Clock      = std::make_shared<ClockManager>(gameWrapper);
     Websocket  = std::make_shared<WebsocketManager>(cvarManager, *cvarPort);
+    BallSpeed  = std::make_shared<BallSpeedManager>(gameWrapper);
+    Clock      = std::make_shared<ClockManager>(gameWrapper, Websocket);
     Nameplates = std::make_shared<NameplatesManager>();
 
     //Run websocket server. Locks onLoad thread
