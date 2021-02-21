@@ -26,18 +26,18 @@ void ClockManager::StartClock(bool bResetAggregate)
     //Get the first delta time when clock starts
     GetTime(bResetAggregate);
 
-    //json event;
-    //event["match_guid"] = currentMatchGuid; //currentMatchGuid is a member of SOS class. Can't access here yet
-    Websocket->SendEvent("game:clock_started", "game_clock_started");
+    json event;
+    event["match_guid"] = CurrentMatchGuid;
+    Websocket->SendEvent("game:clock_started", event);
 }
 
 void ClockManager::StopClock()
 {
     bActive = false;
 
-    //json event;
-    //event["match_guid"] = currentMatchGuid; //currentMatchGuid is a member of SOS class. Can't access here yet
-    Websocket->SendEvent("game:clock_stopped", "game_clock_stopped");
+    json event;
+    event["match_guid"] = CurrentMatchGuid;
+    Websocket->SendEvent("game:clock_stopped", event);
 }
 
 void ClockManager::ResetClock()
@@ -63,9 +63,9 @@ void ClockManager::OnClockUpdated()
     //Since this function should only be called when the game time decimal hits 0, reset the aggregate
     DeltaAggregate = 0.f;
 
-    //json event;
-    //event["match_guid"] = currentMatchGuid; //currentMatchGuid is a member of SOS class. Can't access here yet
-    Websocket->SendEvent("game:clock_updated_seconds", "game_clock_updated_seconds");
+    json event;
+    event["match_guid"] = CurrentMatchGuid;
+    Websocket->SendEvent("game:clock_updated_seconds", event);
 }
 
 float ClockManager::GetTime(bool bResetCurrentDelta)
@@ -129,4 +129,9 @@ void ClockManager::OnOvertimeStarted()
 {
     ResetClock();
     bOvertimeStarted = true;
+}
+
+void ClockManager::UpdateCurrentMatchGuid(std::string MatchGuid)
+{
+    CurrentMatchGuid = MatchGuid;
 }

@@ -148,14 +148,15 @@ void SOS::HookMatchCreated()
     LOGC(" -------------- MATCH CREATED -------------- ");
 
     ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
-    currentMatchGuid = server.GetMatchGUID();
+    CurrentMatchGuid = server.GetMatchGUID();
+    Clock->UpdateCurrentMatchGuid(CurrentMatchGuid);
 
     Clock->ResetClock();
     matchCreated = true;
     DemolitionCountMap.clear();
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:match_created", event);
 }
 
@@ -167,7 +168,7 @@ void SOS::HookReplayCreated()
     matchCreated = true;
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:replay_created", event);
 }
 
@@ -183,7 +184,7 @@ void SOS::HookMatchDestroyed()
     DemolitionCountMap.clear();
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:match_destroyed", event);
 }
 
@@ -197,7 +198,7 @@ void SOS::HookCountdownInit()
     }
 	
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
 
     if (!firstCountdownHit && SOSUtils::ShouldRun(gameWrapper))
     {
@@ -223,7 +224,7 @@ void SOS::HookRoundStarted()
     gameWrapper->SetTimeout(std::bind(&SOS::SetBallHit, this, true), 5.f);
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:round_started_go", "game_round_started_go");
 }
 
@@ -240,7 +241,7 @@ void SOS::HookBallExplode()
         LOGC("Sending ReplayWillEnd Event");
 
         json event;
-        event["match_guid"] = currentMatchGuid;
+        event["match_guid"] = CurrentMatchGuid;
         Websocket->SendEvent("game:replay_will_end", event);
     }
     else
@@ -264,7 +265,7 @@ void SOS::HookGoalReplayStart()
     Websocket->SendEvent("game:replay_start", "game_replay_start");
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:replay_start", event);
 }
 
@@ -273,7 +274,7 @@ void SOS::HookGoalReplayEnd()
     bInGoalReplay = false;
 
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:replay_end", event);
 }
 
@@ -288,7 +289,7 @@ void SOS::HookMatchEnded()
     Clock->ResetClock();
 
     json winnerData;
-    winnerData["match_guid"] = currentMatchGuid;
+    winnerData["match_guid"] = CurrentMatchGuid;
     winnerData["winner_team_num"] = NULL;
 
     ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
@@ -307,7 +308,7 @@ void SOS::HookMatchEnded()
 void SOS::HookPodiumStart()
 {
     json event;
-    event["match_guid"] = currentMatchGuid;
+    event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:podium_start", event);
 }
 

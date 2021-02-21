@@ -19,8 +19,12 @@ public:
 
     void OnOvertimeStarted();
 
+    void UpdateCurrentMatchGuid(std::string MatchGuid);
+
 private:
     ClockManager() = delete; // No default constructor
+
+    std::string CurrentMatchGuid;
 
     std::shared_ptr<GameWrapper> gameWrapper;
     std::shared_ptr<WebsocketManager> Websocket;

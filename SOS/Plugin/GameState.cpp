@@ -14,7 +14,7 @@ void SOS::UpdateGameState(CanvasWrapper canvas)
     state["event"] = "gamestate";
     state["players"] = json::object();
     state["game"] = json::object();
-    state["match_guid"] = currentMatchGuid;
+    state["match_guid"] = CurrentMatchGuid;
 
     //Might want to change this to take MatchCreated into account?
     state["hasGame"] = true;
@@ -319,7 +319,7 @@ void SOS::GetNameplateInfo(CanvasWrapper canvas)
 
     //Create nameplates JSON object
     json nameplatesState;
-    nameplatesState["match_guid"] = currentMatchGuid;
+    nameplatesState["match_guid"] = CurrentMatchGuid;
     nameplatesState["nameplates"] = json::object();
     
     //Get nameplate info and send through websocket
@@ -366,7 +366,7 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
 
     //Build ball touch event
     json ballTouchEvent;
-    ballTouchEvent["match_guid"] = currentMatchGuid;
+    ballTouchEvent["match_guid"] = CurrentMatchGuid;
     ballTouchEvent["player"]["name"] = playerName;
     ballTouchEvent["player"]["id"] = playerID;
     ballTouchEvent["ball"]["pre_hit_speed"] = BallSpeed->GetCachedBallSpeed();
@@ -432,7 +432,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
 
     //General statfeed event
     json statfeed;
-    statfeed["match_guid"] = currentMatchGuid;
+    statfeed["match_guid"] = CurrentMatchGuid;
     statfeed["type"] = eventStr;
     statfeed["main_target"]["name"] = receiverName;
     statfeed["main_target"]["id"] = receiverID;

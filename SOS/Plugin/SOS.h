@@ -19,7 +19,7 @@ public:
     void onUnload() override;
 
 private:
-    std::string currentMatchGuid;
+    std::string CurrentMatchGuid;
 
     // CVARS
     std::shared_ptr<bool>  cvarEnabled;
