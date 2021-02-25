@@ -13,18 +13,24 @@ ServerWrapper SOSUtils::GetCurrentGameState(std::shared_ptr<GameWrapper> gameWra
 
 bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
 {
-    //Check if player is spectating
-    if (!gameWrapper->GetLocalCar().IsNull())
-    {
-        LOGC("GetLocalCar().IsNull(): (need true) false");
-        return false;
-    }
-
     //Check if server exists
     ServerWrapper server = GetCurrentGameState(gameWrapper);
     if (server.IsNull())
     {
         LOGC("server.IsNull(): (need false) true");
+        return false;
+    }
+
+    //Allow in replay mode
+    if (gameWrapper->IsInReplay())
+    {
+        return true;
+    }
+
+    //Check if player is spectating
+    if (!gameWrapper->GetLocalCar().IsNull())
+    {
+        LOGC("GetLocalCar().IsNull(): (need true) false");
         return false;
     }
 
