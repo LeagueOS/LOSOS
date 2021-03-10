@@ -254,12 +254,14 @@ void SOS::HookOnHitGoal(BallWrapper ball, void* params)
 {
     //Lock the current ball speed into the cache
     BallSpeed->LockBallSpeed();
+    Clock->StopClock();
 
     GoalImpactLocation = GetGoalImpactLocation(ball, params);
 }
 
 void SOS::HookGoalReplayStart()
 {
+    Clock->StopClock();
     bInGoalReplay = true;
     bInPreReplayLimbo = false;
     Websocket->SendEvent("game:replay_start", "game_replay_start");

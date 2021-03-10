@@ -92,6 +92,12 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
         SnapshotTime = CurrentTime;
     }
 
+    //Aggregate is just supposed to be between full seconds, so reset if it goes too high for some reason
+    if(DeltaAggregate > 1.f)
+    {
+        DeltaAggregate = 0.f;
+    }
+
     //Check the current game status
     ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
     if(!Server.IsNull())
