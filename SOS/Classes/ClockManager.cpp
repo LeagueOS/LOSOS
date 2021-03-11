@@ -5,7 +5,7 @@
 ClockManager::ClockManager(std::shared_ptr<GameWrapper> InGameWrapper, std::shared_ptr<WebsocketManager> InWebsocketManager)
     : gameWrapper(InGameWrapper), Websocket(InWebsocketManager) {}
 
-void ClockManager::StartClock(bool bResetAggregate)
+void ClockManager::StartClock(bool bResetCurrentDelta)
 {
     //When overtime starts OnTimeUpdated is called, but we don't want the clock starting then
     if(bOvertimeStarted)
@@ -24,7 +24,7 @@ void ClockManager::StartClock(bool bResetAggregate)
     bActive = true;
 
     //Get the first delta time when clock starts
-    GetTime(bResetAggregate);
+    GetTime(bResetCurrentDelta);
 
     json event;
     event["match_guid"] = CurrentMatchGuid;
@@ -54,15 +54,17 @@ void ClockManager::OnClockUpdated()
         StartClock(true);
     }
 
-    ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
-    if(Server.IsNull()) { return; }
-
-    //Get the current second from the game. Can't get float time
-    ReadClockTime = Server.GetSecondsRemaining();
-
     //Since this function should only be called when the game time decimal hits 0, reset the aggregate
     DeltaAggregate = 0.f;
 
+    //Get the current second from the game
+    ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
+    if(!Server.IsNull())
+    {
+        ReadClockTime = Server.GetSecondsRemaining();
+    }
+
+    //Send the event even if the server is null and doesnt actually give the time
     json event;
     event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:clock_updated_seconds", event);
@@ -72,7 +74,7 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
 {
     using namespace std::chrono;
 
-    //This line is called once
+    //This line is called once (static)
     static steady_clock::time_point SnapshotTime = steady_clock::now();
     
     //Reset the current delta when clock has been unpaused
@@ -93,7 +95,7 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
     }
 
     //Aggregate is just supposed to be between full seconds, so reset if it goes too high for some reason
-    if(DeltaAggregate > 1.f)
+    if(DeltaAggregate >= 1.f || DeltaAggregate < 0.f)
     {
         DeltaAggregate = 0.f;
     }

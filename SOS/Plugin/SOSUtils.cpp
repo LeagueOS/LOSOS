@@ -49,9 +49,8 @@ bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
     int playlistID = server.GetPlaylist().GetPlaylistId();
     if (!IsSafeMode(playlistID, SafePlaylists))
     {
-        std::string NotSafeMessage;
-        
         #if SHOULDLOG //Don't constantly compile the message unless it's going to be printed
+        std::string NotSafeMessage;
         NotSafeMessage += "server.GetPlaylist().GetPlaylistId(): (need ";
         
         //Add list of safe modes to string
@@ -65,9 +64,9 @@ bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
         NotSafeMessage.pop_back();
 
         NotSafeMessage += ") " + std::to_string(playlistID);
+        LOGC(NotSafeMessage);
         #endif
 
-        LOGC(NotSafeMessage);
         return false;
     }
 

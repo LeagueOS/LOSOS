@@ -213,6 +213,7 @@ void SOS::HookCountdownInit()
 void SOS::HookRoundStarted()
 {
     bPendingRestartFromKickoff = false;
+    bInGoalReplay = false;
 
     if(!*cvarEnabled || !SOSUtils::ShouldRun(gameWrapper)) { return; }
     
@@ -230,10 +231,10 @@ void SOS::HookRoundStarted()
 
 void SOS::HookBallExplode()
 {
-    if (!*cvarEnabled || !matchCreated) { return; }
-
     BallSpeed->LockBallSpeed();
     Clock->StopClock();
+
+    if (!*cvarEnabled || !matchCreated) { return; }
     
     //Notify that the goal replay will end soon
     if(bInGoalReplay)

@@ -8,7 +8,7 @@ class ClockManager
 public:
     ClockManager(std::shared_ptr<GameWrapper> InGameWrapper, std::shared_ptr<WebsocketManager> InWebsocketManager);
 
-    void StartClock(bool bResetAggregate);
+    void StartClock(bool bResetCurrentDelta);
     void StopClock();
     bool IsClockRunning() { return bActive; }
 
