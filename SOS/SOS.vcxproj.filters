@@ -67,50 +67,56 @@
     <ClCompile Include="Classes\WebsocketManager.cpp">
       <Filter>Plugin Code\Classes\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="Plugin\SOS.cpp">
-      <Filter>Plugin Code\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugin\DebugRenderer.cpp">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugin\EventHooks.cpp">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugin\GameState.cpp">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugin\SOSUtils.cpp">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClCompile>
     <ClCompile Include="States\GameState.cpp">
       <Filter>Plugin Code\States</Filter>
     </ClCompile>
+    <ClCompile Include="Main\SOS.cpp">
+      <Filter>Plugin Code\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportFiles\DebugRenderer.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportFiles\EventHooks.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportFiles\GameState.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportFiles\SettingsFileGenerator.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportFiles\SOSUtils.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
     <ClCompile Include="States\State_AdminPaused.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_Gameplay.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_GoalReplay.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_Kickoff.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_NoGame.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_Overtime.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_Podium.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="States\State_PreGoalReplay.cpp">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="Plugin\SettingsFileGenerator.cpp">
-      <Filter>Plugin Code\Support Files</Filter>
+    <ClCompile Include="DataCollectors\FrameInfo.cpp">
+      <Filter>Plugin Code\DataCollectors</Filter>
+    </ClCompile>
+    <ClCompile Include="DataCollectors\FrameInfoCollectors.cpp">
+      <Filter>Plugin Code\DataCollectors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,41 +189,47 @@
     <ClInclude Include="Classes\WebsocketManager.h">
       <Filter>Plugin Code\Classes\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Plugin\SOS.h">
-      <Filter>Plugin Code\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Plugin\MacrosStructsEnums.h">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Plugin\SOSUtils.h">
-      <Filter>Plugin Code\Support Files</Filter>
-    </ClInclude>
     <ClInclude Include="States\GameState.h">
       <Filter>Plugin Code\States</Filter>
     </ClInclude>
+    <ClInclude Include="Main\SOS.h">
+      <Filter>Plugin Code\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="SupportFiles\MacrosStructsEnums.h">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SupportFiles\SOSUtils.h">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClInclude>
     <ClInclude Include="States\State_AdminPaused.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_Gameplay.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_GoalReplay.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_Kickoff.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_NoGame.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_Overtime.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_Podium.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
     </ClInclude>
     <ClInclude Include="States\State_PreGoalReplay.h">
-      <Filter>Plugin Code\States\States</Filter>
+      <Filter>Plugin Code\States\States\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DataCollectors\FrameInfo.h">
+      <Filter>Plugin Code\DataCollectors</Filter>
+    </ClInclude>
+    <ClInclude Include="DataCollectors\FrameInfoCollectors.h">
+      <Filter>Plugin Code\DataCollectors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +273,15 @@
     </Filter>
     <Filter Include="Plugin Code\States\States">
       <UniqueIdentifier>{6ba6eb80-da8b-43bd-a807-094a4848fa7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Code\States\States\Headers">
+      <UniqueIdentifier>{e1769600-a747-43d7-a44c-04121ac98626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Code\States\States\Implementations">
+      <UniqueIdentifier>{af6e4069-8ee5-44e4-b574-3e3637841485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Code\DataCollectors">
+      <UniqueIdentifier>{4a88b5b1-ed1d-4490-aa08-e70ed5153b9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

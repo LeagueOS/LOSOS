@@ -82,9 +82,9 @@
     <ClInclude Include="Classes\ClockManager.h" />
     <ClInclude Include="Classes\NameplatesManager.h" />
     <ClInclude Include="Classes\WebsocketManager.h" />
-    <ClInclude Include="Plugin\MacrosStructsEnums.h" />
-    <ClInclude Include="Plugin\SOS.h" />
-    <ClInclude Include="Plugin\SOSUtils.h" />
+    <ClInclude Include="DataCollectors\FrameInfo.h" />
+    <ClInclude Include="DataCollectors\FrameInfoCollectors.h" />
+    <ClInclude Include="Main\SOS.h" />
     <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\State_AdminPaused.h" />
     <ClInclude Include="States\State_Gameplay.h" />
@@ -94,6 +94,8 @@
     <ClInclude Include="States\State_Overtime.h" />
     <ClInclude Include="States\State_Podium.h" />
     <ClInclude Include="States\State_PreGoalReplay.h" />
+    <ClInclude Include="SupportFiles\MacrosStructsEnums.h" />
+    <ClInclude Include="SupportFiles\SOSUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sos-plugin-includes\RenderingTools\Extra\CanvasExtensions.cpp" />
@@ -118,12 +120,9 @@
     <ClCompile Include="Classes\ClockManager.cpp" />
     <ClCompile Include="Classes\NameplatesManager.cpp" />
     <ClCompile Include="Classes\WebsocketManager.cpp" />
-    <ClCompile Include="Plugin\DebugRenderer.cpp" />
-    <ClCompile Include="Plugin\EventHooks.cpp" />
-    <ClCompile Include="Plugin\GameState.cpp" />
-    <ClCompile Include="Plugin\SettingsFileGenerator.cpp" />
-    <ClCompile Include="Plugin\SOS.cpp" />
-    <ClCompile Include="Plugin\SOSUtils.cpp" />
+    <ClCompile Include="DataCollectors\FrameInfo.cpp" />
+    <ClCompile Include="DataCollectors\FrameInfoCollectors.cpp" />
+    <ClCompile Include="Main\SOS.cpp" />
     <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\State_AdminPaused.cpp" />
     <ClCompile Include="States\State_Gameplay.cpp" />
@@ -133,6 +132,11 @@
     <ClCompile Include="States\State_Overtime.cpp" />
     <ClCompile Include="States\State_Podium.cpp" />
     <ClCompile Include="States\State_PreGoalReplay.cpp" />
+    <ClCompile Include="SupportFiles\DebugRenderer.cpp" />
+    <ClCompile Include="SupportFiles\EventHooks.cpp" />
+    <ClCompile Include="SupportFiles\GameState.cpp" />
+    <ClCompile Include="SupportFiles\SettingsFileGenerator.cpp" />
+    <ClCompile Include="SupportFiles\SOSUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
