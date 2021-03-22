@@ -82,6 +82,36 @@
     <ClCompile Include="Plugin\SOSUtils.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>
+    <ClCompile Include="States\GameState.cpp">
+      <Filter>Plugin Code\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_AdminPaused.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_Gameplay.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_GoalReplay.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_Kickoff.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_NoGame.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_Overtime.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_Podium.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="States\State_PreGoalReplay.cpp">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\SettingsFileGenerator.cpp">
+      <Filter>Plugin Code\Support Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sos-plugin-includes\RenderingTools\Extra\CanvasExtensions.h">
@@ -162,13 +192,37 @@
     <ClInclude Include="Plugin\SOSUtils.h">
       <Filter>Plugin Code\Support Files</Filter>
     </ClInclude>
+    <ClInclude Include="States\GameState.h">
+      <Filter>Plugin Code\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_AdminPaused.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_Gameplay.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_GoalReplay.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_Kickoff.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_NoGame.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_Overtime.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_Podium.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
+    <ClInclude Include="States\State_PreGoalReplay.h">
+      <Filter>Plugin Code\States\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
       <Filter>Extra Files</Filter>
-    </None>
-    <None Include="UI\sos.set">
-      <Filter>Plugin Code\UI</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -190,9 +244,6 @@
     <Filter Include="Plugin Code\Classes">
       <UniqueIdentifier>{04228b70-6675-479e-97e7-5f5206c9eb0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugin Code\UI">
-      <UniqueIdentifier>{95d81ead-3f4d-4ae0-87cb-dc3816f49be3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugin Code\Classes\Headers">
       <UniqueIdentifier>{858920aa-8857-4d39-994e-ce5f162f8d8f}</UniqueIdentifier>
     </Filter>
@@ -204,6 +255,12 @@
     </Filter>
     <Filter Include="Plugin Code\Support Files">
       <UniqueIdentifier>{69bffb0f-5c45-41e1-82e3-0f6a5881d8cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Code\States">
+      <UniqueIdentifier>{169ac092-3410-407c-b967-3f4b6eafa8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin Code\States\States">
+      <UniqueIdentifier>{6ba6eb80-da8b-43bd-a807-094a4848fa7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

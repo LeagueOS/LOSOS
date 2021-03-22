@@ -6,8 +6,11 @@
 #include "Classes/BallSpeedManager.h"
 #include "Classes/ClockManager.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
-#include "MacrosStructsEnums.h"
+#include "SupportFiles/MacrosStructsEnums.h"
 #include "json.hpp"
+
+#include "States/GameState.h"
+#include <map>
 
 using json = nlohmann::json;
 
@@ -18,14 +21,19 @@ public:
     void onLoad() override;
     void onUnload() override;
 
+    bool ShouldRun();
+    bool IsSafeMode(int CurrentPlaylist, const std::vector<int>& SafePlaylists);
+
+    void GenerateSettingsFile();
+
 private:
     std::string CurrentMatchGuid;
 
     // CVARS
-    std::shared_ptr<bool>  cvarEnabled;
-    std::shared_ptr<int>   cvarPort;
-    std::shared_ptr<float> cvarUpdateRate;
-    std::shared_ptr<bool>  bEnableDebugRendering;
+    std::shared_ptr<bool>  bEnabled;
+    std::shared_ptr<int>   Port;
+    std::shared_ptr<float> UpdateRate;
+    std::shared_ptr<bool>  bDebugRender;
 
     // MANAGERS
     std::shared_ptr<WebsocketManager> Websocket;
@@ -33,14 +41,10 @@ private:
     std::shared_ptr<BallSpeedManager> BallSpeed;
     std::shared_ptr<ClockManager> Clock;
 
-    // ORIGINAL SOS VARIABLES
-    bool firstCountdownHit = false;
-    bool matchCreated = false;
-    bool isCurrentlySpectating = false;
-    bool bInGoalReplay = false;
-    bool bInPreReplayLimbo = false;
-    bool bBallHasBeenHit = false;
-    bool bPendingRestartFromKickoff = false;
+    // STATES
+    std::map<EGameState, GameState*> States;
+    EGameState CurrentState;
+    EGameState PreviousState;
 
     // GOAL SCORED VARIABLES
     LastTouchInfo lastTouch;
@@ -50,7 +54,6 @@ private:
 
     // MAIN FUNCTION (GameState.cpp)
     void UpdateGameState(CanvasWrapper canvas);
-    //void GetGameStateInfo(CanvasWrapper canvas, json& state);
 
     // HOOKS (EventHooks.cpp)
     void HookAllEvents();
@@ -92,7 +95,7 @@ private:
     void GetStatEventInfo(ServerWrapper caller, void* params);
 
     // DEMO TRACKER
-    std::map<std::string, int> DemolitionCountMap{};
+    std::map<std::string, int> DemolitionCountMap;
     void DemoCounterIncrement(std::string playerId);
     int DemoCounterGetCount(std::string playerId);
 

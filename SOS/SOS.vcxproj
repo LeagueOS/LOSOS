@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release-Nameplates|x64">
-      <Configuration>Release-Nameplates</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -26,13 +22,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Nameplates|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -42,15 +31,8 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="BakkesMod.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-Nameplates|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="BakkesMod.props" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Nameplates|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -61,34 +43,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;BAKKESTEST_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\nlohmann-JSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(BakkesModPath)\bakkesmodsdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Nameplates|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>USE_NAMEPLATES;NDEBUG;BAKKESTEST_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)sos-plugin-includes\RenderingTools;$(SolutionDir)sos-plugin-includes\nlohmann-JSON;$(SolutionDir)sos-plugin-includes\asio-1.12.2\include;$(SolutionDir)sos-plugin-includes\websocketpp-0.8.1;$(BakkesModPath)\bakkesmodsdk\include;$(ProjectDir)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,6 +85,15 @@
     <ClInclude Include="Plugin\MacrosStructsEnums.h" />
     <ClInclude Include="Plugin\SOS.h" />
     <ClInclude Include="Plugin\SOSUtils.h" />
+    <ClInclude Include="States\GameState.h" />
+    <ClInclude Include="States\State_AdminPaused.h" />
+    <ClInclude Include="States\State_Gameplay.h" />
+    <ClInclude Include="States\State_GoalReplay.h" />
+    <ClInclude Include="States\State_Kickoff.h" />
+    <ClInclude Include="States\State_NoGame.h" />
+    <ClInclude Include="States\State_Overtime.h" />
+    <ClInclude Include="States\State_Podium.h" />
+    <ClInclude Include="States\State_PreGoalReplay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sos-plugin-includes\RenderingTools\Extra\CanvasExtensions.cpp" />
@@ -152,12 +121,21 @@
     <ClCompile Include="Plugin\DebugRenderer.cpp" />
     <ClCompile Include="Plugin\EventHooks.cpp" />
     <ClCompile Include="Plugin\GameState.cpp" />
+    <ClCompile Include="Plugin\SettingsFileGenerator.cpp" />
     <ClCompile Include="Plugin\SOS.cpp" />
     <ClCompile Include="Plugin\SOSUtils.cpp" />
+    <ClCompile Include="States\GameState.cpp" />
+    <ClCompile Include="States\State_AdminPaused.cpp" />
+    <ClCompile Include="States\State_Gameplay.cpp" />
+    <ClCompile Include="States\State_GoalReplay.cpp" />
+    <ClCompile Include="States\State_Kickoff.cpp" />
+    <ClCompile Include="States\State_NoGame.cpp" />
+    <ClCompile Include="States\State_Overtime.cpp" />
+    <ClCompile Include="States\State_Podium.cpp" />
+    <ClCompile Include="States\State_PreGoalReplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="UI\sos.set" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
