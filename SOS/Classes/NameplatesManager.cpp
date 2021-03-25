@@ -1,8 +1,8 @@
 #include "NameplatesManager.h"
 #include "json.hpp"
 #include "RenderingTools.h"
-#include "Plugin/MacrosStructsEnums.h"
-#include "Plugin/SOSUtils.h"
+#include "SupportFiles/MacrosStructsEnums.h"
+#include "SupportFiles/SOSUtils.h"
 
 void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json& nameplatesState)
 {

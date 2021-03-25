@@ -79,7 +79,7 @@
     <ClCompile Include="SupportFiles\EventHooks.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>
-    <ClCompile Include="SupportFiles\GameState.cpp">
+    <ClCompile Include="SupportFiles\GameStateManager.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>
     <ClCompile Include="SupportFiles\SettingsFileGenerator.cpp">
@@ -118,7 +118,7 @@
     <ClCompile Include="DataCollectors\FrameInfoCollectors.cpp">
       <Filter>Plugin Code\DataCollectors</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\Logger.cpp">
+    <ClCompile Include="Classes\SOSLogger.cpp">
       <Filter>Plugin Code\Classes\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
@@ -234,7 +234,7 @@
     <ClInclude Include="DataCollectors\FrameInfoCollectors.h">
       <Filter>Plugin Code\DataCollectors</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Logger.h">
+    <ClInclude Include="Classes\SOSLogger.h">
       <Filter>Plugin Code\Classes\Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,6 +31,7 @@ private:
 
     // CVARS
     std::shared_ptr<bool>  bEnabled;
+    std::shared_ptr<bool>  bUseNameplates;
     std::shared_ptr<int>   Port;
     std::shared_ptr<float> UpdateRate;
     std::shared_ptr<bool>  bDebugRender;

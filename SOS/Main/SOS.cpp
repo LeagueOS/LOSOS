@@ -1,4 +1,5 @@
 #include "SOS.h"
+#include "Classes/SOSLogger.h"
 #include "States/State_AdminPaused.h"
 #include "States/State_Gameplay.h"
 #include "States/State_GoalReplay.h"
@@ -21,7 +22,6 @@ BAKKESMOD_PLUGIN(SOS, "Simple Overlay System", SOS_VERSION, PLUGINTYPE_THREADED)
 //Declare global pointers
 std::shared_ptr<CVarManagerWrapper> GlobalCvarManager;
 std::shared_ptr<GameWrapper> GlobalGameWrapper;
-std::shared_ptr<int> SOSLogLevel;
 
 void SOS::onLoad()
 {
@@ -29,17 +29,20 @@ void SOS::onLoad()
     GlobalCvarManager = cvarManager;
     GlobalGameWrapper = gameWrapper;
 
+    //Init logger
+    SOSLogger::Init(cvarManager);
+
     //Register cvars
-    SOSLogLevel  = std::make_shared<int>(0);
-    bEnabled     = std::make_shared<bool>(false);
-    Port         = std::make_shared<int>(49122);
-    UpdateRate   = std::make_shared<float>(100.0f);
-    bDebugRender = std::make_shared<bool>(false);
-    GlobalCvarManager->registerCvar(CVAR_LOG_LEVEL,    "1",     "How much info to print to the console", true, true, 0, true, 3).bindTo(SOSLogLevel);
-    GlobalCvarManager->registerCvar(CVAR_ENABLED,      "1",     "Enable SOS plugin", true).bindTo(bEnabled);
-    GlobalCvarManager->registerCvar(CVAR_PORT,         "49122", "Websocket port for SOS overlay plugin", true).bindTo(Port);
-    GlobalCvarManager->registerCvar(CVAR_MESSAGE_RATE, "100",   "Rate at which to send events to websocket (milliseconds)", true, true, 5.0f, true, 2000.0f).bindTo(UpdateRate);
-    GlobalCvarManager->registerCvar(CVAR_DEBUG_RENDER, "0",     "Enables on-screen debug text for SOS", true).bindTo(bDebugRender);
+    bEnabled       = std::make_shared<bool>(false);
+    bUseNameplates = std::make_shared<bool>(false);
+    Port           = std::make_shared<int>(49122);
+    UpdateRate     = std::make_shared<float>(100.0f);
+    bDebugRender   = std::make_shared<bool>(false);
+    GlobalCvarManager->registerCvar(CVAR_ENABLED,        "1",     "Enable SOS plugin", true).bindTo(bEnabled);
+    GlobalCvarManager->registerCvar(CVAR_USE_NAMEPLATES, "0",     "Send nameplate info in SOS", true).bindTo(bUseNameplates);
+    GlobalCvarManager->registerCvar(CVAR_PORT,           "49122", "Websocket port for SOS overlay plugin", true).bindTo(Port);
+    GlobalCvarManager->registerCvar(CVAR_MESSAGE_RATE,   "100",   "Rate at which to send events to websocket (milliseconds)", true, true, 5.0f, true, 2000.0f).bindTo(UpdateRate);
+    GlobalCvarManager->registerCvar(CVAR_DEBUG_RENDER,   "0",     "Enables on-screen debug text for SOS", true).bindTo(bDebugRender);
 
     //Create managers
     Websocket  = std::make_shared<WebsocketManager>(cvarManager, *Port);
@@ -103,7 +106,7 @@ bool SOS::ShouldRun()
     ServerWrapper Server = GlobalGameWrapper->GetCurrentGameState();
     if(Server.IsNull())
     {
-        LOG3("server.IsNull(): (need false) true");
+        LOG_INFO("server.IsNull(): (need false) true");
         return false;
     }
 
@@ -116,7 +119,7 @@ bool SOS::ShouldRun()
     //Check if player is spectating
     if(!GlobalGameWrapper->GetLocalCar().IsNull())
     {
-        LOG3("GetLocalCar().IsNull(): (need true) false");
+        LOG_INFO("GetLocalCar().IsNull(): (need true) false");
         return false;
     }
 
@@ -124,7 +127,7 @@ bool SOS::ShouldRun()
     GameSettingPlaylistWrapper GSPW = Server.GetPlaylist();
     if(GSPW.memory_address == NULL)
     {
-        LOG3("server.GetPlaylist().memory_address == NULL: (need false) true");
+        LOG_INFO("server.GetPlaylist().memory_address == NULL: (need false) true");
         return false;
     }
 
@@ -136,7 +139,7 @@ bool SOS::ShouldRun()
     int CurrentPlaylistID = GSPW.GetPlaylistId();
     if(!IsSafeMode(CurrentPlaylistID, SafePlaylists))
     {
-        if(*SOSLogLevel >= 3)
+        if(SOSLogger::GetLogLevel() >= ESOSLogLevel::Info)
         {
             std::string NotSafeMessage;
             NotSafeMessage += "server.GetPlaylist().GetPlaylistId(): (need ";
@@ -152,7 +155,7 @@ bool SOS::ShouldRun()
             NotSafeMessage.pop_back();
 
             NotSafeMessage += ") " + std::to_string(CurrentPlaylistID);
-            LOG3(NotSafeMessage);
+            LOG_INFO(NotSafeMessage);
         }
 
         return false;

@@ -1,3 +1,5 @@
+#if ILL_GET_TO_THIS_LATER
+
 #include "FrameInfo.h"
 #include "SupportFiles/MacrosStructsEnums.h"
 #include "SimpleJSON/json.hpp"
@@ -84,3 +86,5 @@ std::string FrameInfo::PrintExampleFormat()
 
     return "FrameNumber:" + Output.dump(1, "\t");
 }
+
+#endif

@@ -1,10 +1,10 @@
-#include "SOS.h"
+#include "Main/SOS.h"
 #include "utils/parser.h"
 #include <sstream>
 
 void SOS::DebugRender(CanvasWrapper canvas)
 {
-    if(!*bEnableDebugRendering) { return; }
+    if(!*bDebugRender) { return; }
 
     //This vector will store all the text and colors for each string to be printed
     std::vector<DebugText> TextVector;

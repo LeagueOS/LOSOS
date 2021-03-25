@@ -1,5 +1,6 @@
-#include "SOS.h"
+#include "Main/SOS.h"
 #include "SOSUtils.h"
+#include "Classes/SOSLogger.h"
 #include "json.hpp"
 #include "RenderingTools.h"
 #include "utils/parser.h"
@@ -27,7 +28,7 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
     using namespace std::chrono;
 
     //Server is nullchecked in the viewport tick call to UpdateGameState
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper server = gameWrapper->GetCurrentGameState();
 
     //Get ball speed every tick
     GetCurrentBallSpeed();
@@ -41,7 +42,7 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
     float TimeSinceLastNameplatesCall = duration_cast<duration<float>>(steady_clock::now() - LastNameplatesCallTime).count();
 
     //Game State
-    if(TimeSinceLastGameStateCall >= (*cvarUpdateRate / 1000.f))
+    if(TimeSinceLastGameStateCall >= (*UpdateRate / 1000.f))
     {
         GetPlayerInfo(state, server);
         GetTeamInfo(state, server);
@@ -57,7 +58,7 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
 
     //Nameplates - twice the rate of game state for better positioning fidelity?
     //Previously: if((TimeSinceLastNameplatesCall * 1000) < 11.11f) for 90fps rate
-    if(TimeSinceLastNameplatesCall >= ((*cvarUpdateRate * 0.5f) / 1000.f))
+    if(TimeSinceLastNameplatesCall >= ((*UpdateRate * 0.5f) / 1000.f))
     {
         GetNameplateInfo(canvas);
 
@@ -209,7 +210,7 @@ void SOS::GetTeamInfo(json& state, ServerWrapper server)
 
 void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
 {
-    float OutputTime = !firstCountdownHit ? 300.f : Clock->GetTime();
+    float OutputTime = /*!firstCountdownHit ? 300.f : */Clock->GetTime(); //firstCountdownHit will be replaced by State_Kickoff
 
     state["game"]["time"] = OutputTime;
     state["game"]["isOT"] = (bool)server.GetbOverTime();
@@ -220,7 +221,7 @@ void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
         state["game"]["elapsed"] = gameWrapper->GetGameEventAsReplay().GetReplayTimeElapsed();
     }
 
-    LOGC(std::to_string(OutputTime));
+    LOG_INFO(std::to_string(OutputTime));
 }
 
 void SOS::GetBallInfo(json& state, ServerWrapper server)
@@ -309,12 +310,10 @@ void SOS::GetCameraInfo(json& state)
 
 void SOS::GetNameplateInfo(CanvasWrapper canvas)
 {
-    #ifdef USE_NAMEPLATES
-    
-    if(!SOSUtils::ShouldRun(gameWrapper)) { return; }
+    if(!ShouldRun() || !*bUseNameplates) { return; }
     CameraWrapper camera = gameWrapper->GetCamera();
     if(camera.IsNull()) { return; }
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper server = gameWrapper->GetCurrentGameState();
     if(server.IsNull()) { return; }
 
     //Create nameplates JSON object
@@ -325,26 +324,24 @@ void SOS::GetNameplateInfo(CanvasWrapper canvas)
     //Get nameplate info and send through websocket
     Nameplates->GetNameplateInfo(canvas, camera, server, nameplatesState);
     Websocket->SendEvent("game:nameplate_tick", nameplatesState);
-    
-    #endif
 }
 
 
 // CALLED BY EVENT HOOKS //
 void SOS::GetCurrentBallSpeed()
 {
-    if (!SOSUtils::ShouldRun(gameWrapper)) { return; }
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
-    if (server.IsNull()) { return; }
+    if(!ShouldRun()) { return; }
+    ServerWrapper server = gameWrapper->GetCurrentGameState();
+    if(server.IsNull()) { return; }
     BallWrapper ball = server.GetBall();
-    if (ball.IsNull()) { return; }
+    if(ball.IsNull()) { return; }
 
     BallSpeed->UpdateBallSpeed(SOSUtils::ToKPH(ball.GetVelocity().magnitude()) + .5f);
 }
 
 void SOS::GetLastTouchInfo(CarWrapper car, void* params)
 {
-    if(!SOSUtils::ShouldRun(gameWrapper)) { return; }
+    if(!ShouldRun()) { return; }
 
     //Local struct
     struct HitBallParams
