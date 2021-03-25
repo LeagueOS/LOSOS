@@ -13,6 +13,8 @@ void SOS::GenerateSettingsFile()
 
     nl("SOS");
     blank;
+    nl("9|Version: " + cv(SOS_VERSION));
+    blank;
     nl("1|Enable|" + cv(CVAR_ENABLED));
     nl("7|");
     nl("1|Send Nameplate Info|" + cv(CVAR_USE_NAMEPLATES));

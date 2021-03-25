@@ -5,7 +5,7 @@ extern std::shared_ptr<class CVarManagerWrapper> GlobalCvarManager;
 extern std::shared_ptr<class GameWrapper> GlobalGameWrapper;
 
 // MACROS //
-#define SOS_VERSION "1.6.0-beta.5"
+#define SOS_VERSION "2.0"
 
 #define CVAR_LOG_LEVEL      "SOS_LogLevel"
 #define CVAR_ENABLED        "SOS_bEnabled"
