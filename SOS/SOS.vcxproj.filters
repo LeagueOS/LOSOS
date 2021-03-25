@@ -118,6 +118,9 @@
     <ClCompile Include="DataCollectors\FrameInfoCollectors.cpp">
       <Filter>Plugin Code\DataCollectors</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\Logger.cpp">
+      <Filter>Plugin Code\Classes\Implementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\sos-plugin-includes\RenderingTools\Extra\CanvasExtensions.h">
@@ -230,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="DataCollectors\FrameInfoCollectors.h">
       <Filter>Plugin Code\DataCollectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Logger.h">
+      <Filter>Plugin Code\Classes\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

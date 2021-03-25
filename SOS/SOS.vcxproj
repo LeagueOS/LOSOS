@@ -80,6 +80,7 @@
     <ClInclude Include="..\sos-plugin-includes\RenderingTools\RenderingTools.h" />
     <ClInclude Include="Classes\BallSpeedManager.h" />
     <ClInclude Include="Classes\ClockManager.h" />
+    <ClInclude Include="Classes\Logger.h" />
     <ClInclude Include="Classes\NameplatesManager.h" />
     <ClInclude Include="Classes\WebsocketManager.h" />
     <ClInclude Include="DataCollectors\FrameInfo.h" />
@@ -118,6 +119,7 @@
     <ClCompile Include="..\sos-plugin-includes\RenderingTools\Objects\VisualCamera.cpp" />
     <ClCompile Include="Classes\BallSpeedManager.cpp" />
     <ClCompile Include="Classes\ClockManager.cpp" />
+    <ClCompile Include="Classes\Logger.cpp" />
     <ClCompile Include="Classes\NameplatesManager.cpp" />
     <ClCompile Include="Classes\WebsocketManager.cpp" />
     <ClCompile Include="DataCollectors\FrameInfo.cpp" />
