@@ -86,7 +86,7 @@
     <ClInclude Include="DataCollectors\FrameInfo.h" />
     <ClInclude Include="DataCollectors\FrameInfoCollectors.h" />
     <ClInclude Include="Main\SOS.h" />
-    <ClInclude Include="States\GameState.h" />
+    <ClInclude Include="States\IGameState.h" />
     <ClInclude Include="States\State_AdminPaused.h" />
     <ClInclude Include="States\State_Gameplay.h" />
     <ClInclude Include="States\State_GoalReplay.h" />
@@ -125,7 +125,7 @@
     <ClCompile Include="DataCollectors\FrameInfo.cpp" />
     <ClCompile Include="DataCollectors\FrameInfoCollectors.cpp" />
     <ClCompile Include="Main\SOS.cpp" />
-    <ClCompile Include="States\GameState.cpp" />
+    <ClCompile Include="States\IGameState.cpp" />
     <ClCompile Include="States\State_AdminPaused.cpp" />
     <ClCompile Include="States\State_Gameplay.cpp" />
     <ClCompile Include="States\State_GoalReplay.cpp" />

@@ -23,6 +23,8 @@ BAKKESMOD_PLUGIN(SOS, "Simple Overlay System", SOS_VERSION, PLUGINTYPE_THREADED)
 std::shared_ptr<CVarManagerWrapper> GlobalCvarManager;
 std::shared_ptr<GameWrapper> GlobalGameWrapper;
 
+
+// INITIALIZATION //
 void SOS::onLoad()
 {
     //Assign global pointers. SOSLogLevel assigned in cvars
@@ -51,14 +53,7 @@ void SOS::onLoad()
     Nameplates = std::make_shared<NameplatesManager>();
 
     //Initialize states
-    States[EGameState::NoGame]        = new State_NoGame();
-    States[EGameState::AdminPaused]   = new State_AdminPaused();
-    States[EGameState::Kickoff]       = new State_Kickoff();
-    States[EGameState::Gameplay]      = new State_Gameplay();
-    States[EGameState::PreGoalReplay] = new State_PreGoalReplay();
-    States[EGameState::GoalReplay]    = new State_GoalReplay();
-    States[EGameState::Overtime]      = new State_Overtime();
-    States[EGameState::Podium]        = new State_Podium();
+    InitStates();
 
     //Set the current state
     PreviousState = EGameState::NoGame;
@@ -80,6 +75,25 @@ void SOS::onLoad()
     Websocket->StartServer();
 }
 
+void SOS::InitStates()
+{
+    InitState(new State_NoGame());
+    InitState(new State_AdminPaused());
+    InitState(new State_Kickoff());
+    InitState(new State_Gameplay());
+    InitState(new State_PreGoalReplay());
+    InitState(new State_GoalReplay());
+    InitState(new State_Overtime());
+    InitState(new State_Podium());
+}
+
+void SOS::InitState(IGameState* NewState)
+{
+    States[NewState->GetStateType()] = NewState;
+}
+
+
+// CLEANUP //
 void SOS::onUnload()
 {
     // Clean up all memory so plugin can unload and reload //
@@ -95,6 +109,8 @@ void SOS::onUnload()
     }
 }
 
+
+// RUNTIME CHECKS //
 bool SOS::ShouldRun()
 {
     if(!*bEnabled)

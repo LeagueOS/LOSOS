@@ -67,7 +67,7 @@
     <ClCompile Include="Classes\WebsocketManager.cpp">
       <Filter>Plugin Code\Classes\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="States\GameState.cpp">
+    <ClCompile Include="States\IGameState.cpp">
       <Filter>Plugin Code\States</Filter>
     </ClCompile>
     <ClCompile Include="Main\SOS.cpp">
@@ -192,7 +192,7 @@
     <ClInclude Include="Classes\WebsocketManager.h">
       <Filter>Plugin Code\Classes\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="States\GameState.h">
+    <ClInclude Include="States\IGameState.h">
       <Filter>Plugin Code\States</Filter>
     </ClInclude>
     <ClInclude Include="Main\SOS.h">

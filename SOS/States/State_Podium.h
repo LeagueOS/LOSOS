@@ -1,7 +1,7 @@
 #pragma once
-#include "GameState.h"
+#include "IGameState.h"
 
-class State_Podium : public GameState
+class State_Podium : public IGameState
 {
 public:
     State_Podium();

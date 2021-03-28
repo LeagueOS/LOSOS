@@ -13,10 +13,10 @@ enum class EGameState
     Podium
 };
 
-class GameState
+class IGameState
 {
 public:
-    GameState(EGameState InStateType, const char* InStateName);
+    IGameState(EGameState InStateType, const char* InStateName);
 
     EGameState GetStateType()  { return StateType; }
     const char* GetStateName() { return StateName; }

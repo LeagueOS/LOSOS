@@ -9,7 +9,7 @@
 #include "SupportFiles/MacrosStructsEnums.h"
 #include "json.hpp"
 
-#include "States/GameState.h"
+#include "States/IGameState.h"
 #include <map>
 
 using json = nlohmann::json;
@@ -20,6 +20,9 @@ class SOS : public BakkesMod::Plugin::BakkesModPlugin
 public:
     void onLoad() override;
     void onUnload() override;
+    
+    void InitStates();
+    void InitState(IGameState* NewState);
 
     bool ShouldRun();
     bool IsSafeMode(int CurrentPlaylist, const std::vector<int>& SafePlaylists);
@@ -43,7 +46,7 @@ private:
     std::shared_ptr<ClockManager> Clock;
 
     // STATES
-    std::map<EGameState, GameState*> States;
+    std::map<EGameState, IGameState*> States;
     EGameState CurrentState;
     EGameState PreviousState;
 
