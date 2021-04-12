@@ -9,6 +9,7 @@ https://gitlab.com/bakkesplugins/sos/codename-covert
 - Download the [latest release](https://gitlab.com/bakkesplugins/sos/sos-plugin/-/releases).
 - Find the BakkesMod folder by using `File > Open BakkesMod Folder` in the injector window.
 - Copy the release dll into `bakkesmod/plugins/`.
+    - *A .set file is no longer included in the release as the plugin generates one when it loads.*
 - Open `bakkesmod/cfg/plugins.cfg` in a text editor.
 - At the bottom on its own line, add `plugin load sos`.
 
