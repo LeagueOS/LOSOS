@@ -1,25 +1,24 @@
-# SOS Overlay System
+# SOS - Simple Overlay System
 SOS-Plugin aims to provide an easy to use event relay in use for Esports broadcasts, particularily in the Tournament sector. Personal streams are able to use this, but it is not officially supported at this moment.
 
 Want some real life examples? Check out the `Codename: COVERT` assets:
 https://gitlab.com/bakkesplugins/sos/codename-covert
 
-## BakkesMod SDK Setup
-The solution contains $(BAKKESMODSDK) environment variable references for the SDK. Create your own environment variable (use Google) point to the SDK base and the configuration will handle the rest
+## Setting up the plugin
+- Close Rocket League if it is open.
+- Download the [latest release](https://gitlab.com/bakkesplugins/sos/sos-plugin/-/releases).
+- Find the BakkesMod folder by using `File > Open BakkesMod Folder` in the injector window.
+- Copy the release dll into `bakkesmod/plugins/`.
+- Open `bakkesmod/cfg/plugins.cfg` in a text editor.
+- At the bottom on its own line, add `plugin load sos`.
 
-Example variable configuration:
-1. My BakkesMod base installation is located at `J:\SteamLibrary\steamapps\common\rocketleague\Binaries\Win32\bakkesmod`
-2. Point the variable to `J:\SteamLibrary\steamapps\common\rocketleague\Binaries\Win32\bakkesmod\bakkesmodsdk`
+## Building the source
+Building the plugin source is not necessary unless you wish to make modifications to the code. If you want to build from source, all you should need to do is pull and build. Make sure the submodule(s) get pulled as well before you build. Project dependencies should be set up automatically. You can build while Rocket League is open without having to unload/load the plugin - the post build command handles the hotswap automatically for you.
 
-## BakkesMod Settings File
-1. In the root directory of this repo, there's a file named `sos.set`. This is the BakkesMod Settings File that must be inserted into the following location to be able to control update frequency and SOS events
-  - `J:\SteamLibrary\steamapps\common\rocketleague\Binaries\Win32\bakkesmod\plugins\settings`
-
-2. Open `bakkesmod/cfg/plugins.cfg` in a text editor. At the bottom on its own line, add `plugin load sos`
-
-## Websocket Server
+## Websocket server
 Address: ws://localhost:49122
 
+## Events and data
 Most event names are fairly self explanatory, but it is still recommended to listen to the WebSocket server for a game or two to get a feel for when events are fired
 The websocket reports the following events in `channel:event` format:
 
@@ -157,6 +156,8 @@ The websocket reports the following events in `channel:event` format:
 ```
 
 ## Libraries Required
-
-The following libraries can be retrieved from this submodule:
-https://gitlab.com/bakkesplugins/sos/sos-plugin-includes
+The following libraries can be retrieved from [this submodule](https://gitlab.com/bakkesplugins/sos/sos-plugin-includes):
+- RenderingTools
+- asio-1.12.2
+- nlohmann-JSON
+- websocketpp-0.8.1
