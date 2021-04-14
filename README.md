@@ -117,6 +117,7 @@ The websocket reports the following events in `channel:event` format:
     }
   },
   "game:statfeed_event": {
+    "event_name": "string"
     "main_target": {
       "id": "string",
       "name": "string",

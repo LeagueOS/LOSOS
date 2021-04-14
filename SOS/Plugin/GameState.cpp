@@ -418,6 +418,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     auto statEvent = StatEventWrapper(tArgs->StatEvent);
     auto label = statEvent.GetLabel();
     auto eventStr = label.ToString();
+    auto eventName = statEvent.GetEventName();
 
     //Receiver info
     auto receiver = PriWrapper(tArgs->Receiver);
@@ -428,11 +429,11 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     auto victim = PriWrapper(tArgs->Victim);
     std::string victimName, victimID;
     SOSUtils::GetNameAndID(victim, victimName, victimID);
-   
 
     //General statfeed event
     json statfeed;
     statfeed["match_guid"] = CurrentMatchGuid;
+    statfeed["event_name"] = eventName;
     statfeed["type"] = eventStr;
     statfeed["main_target"]["name"] = receiverName;
     statfeed["main_target"]["id"] = receiverID;
@@ -443,7 +444,7 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     Websocket->SendEvent("game:statfeed_event", statfeed);
 
     //Demolition event
-    if (eventStr == "Demolition")
+    if (eventName == "Demolish")
     {
         SOS::DemoCounterIncrement(receiverID);
     }
