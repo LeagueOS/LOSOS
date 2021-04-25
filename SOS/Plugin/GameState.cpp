@@ -211,7 +211,9 @@ void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
 {
     float OutputTime = !firstCountdownHit ? 300.f : Clock->GetTime();
 
-    state["game"]["time"] = OutputTime;
+    //Counts down the kickoff, may be useful later => server.GetGameStateTimeRemaining();
+    state["game"]["time_milliseconds"] = OutputTime;
+    state["game"]["time_seconds"] = server.GetSecondsRemaining();
     state["game"]["isOT"] = (bool)server.GetbOverTime();
 
     if (gameWrapper->IsInReplay())
