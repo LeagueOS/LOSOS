@@ -155,6 +155,9 @@ void SOS::HookMatchCreated()
     matchCreated = true;
     DemolitionCountMap.clear();
 
+    // Team names can only be changed after the teams have been initialized (HookInitTeams)
+    Websocket->AssignTeamNames();
+        
     json event;
     event["match_guid"] = CurrentMatchGuid;
     Websocket->SendEvent("game:match_created", event);

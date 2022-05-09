@@ -2,12 +2,13 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "json.hpp"
 #include "utils/parser.h"
+#include "Plugin/SOSUtils.h"
 
 using nlohmann::json;
 
 // PUBLIC FUNCTIONS //
-WebsocketManager::WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort)
-    : cvarManager(InCvarManager), ListenPort(InListenPort) {}
+WebsocketManager::WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort, std::shared_ptr<GameWrapper> InGameWrapper)
+    : cvarManager(InCvarManager), ListenPort(InListenPort), gameWrapper(InGameWrapper) {}
 
 void WebsocketManager::SendEvent(std::string eventName, const json &jsawn)
 {
@@ -22,6 +23,9 @@ void WebsocketManager::StartServer()
     using namespace std::placeholders;
 
     cvarManager->log("Starting WebSocket server");
+
+    customTeam0Name = "";
+    customTeam1Name = "";
 
     ws_connections = new ConnectionSet();
     ws_server = new PluginServer();
@@ -61,11 +65,47 @@ void WebsocketManager::StopServer()
     }
 }
 
+void WebsocketManager::AssignTeamNames()
+{
+    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ArrayWrapper<TeamWrapper> teams = server.GetTeams();
+
+    if (customTeam0Name.length() > 0 && teams.Count() > 0)
+    {
+        TeamWrapper team = teams.Get(0);
+        cvarManager->log("- Setting Custom Name: " + customTeam0Name);
+        team.SetCustomTeamName(customTeam0Name);
+        customTeam0Name = "";
+    }
+    if (customTeam1Name.length() > 0 && teams.Count() > 1)
+    {
+        TeamWrapper team = teams.Get(1);
+        cvarManager->log("- Setting Custom Name: " + customTeam1Name);
+        team.SetCustomTeamName(customTeam1Name);
+        customTeam1Name = "";
+    }
+}
 
 // PRIVATE FUNCTIONS //
 void WebsocketManager::OnWsMsg(connection_hdl hdl, PluginServer::message_ptr msg)
 {
-    //SendWebSocketPayload(msg->get_payload());
+    try
+    {
+        std::string payload = msg->get_payload();
+        cvarManager->log("SOS RX Message: " + payload);
+        json jdata = json::parse(payload);
+
+        // ToDo: define a more robust message format
+        // Example stateless object: jdata["game"]["teams"][0]["name"] = "BLUE";
+
+        // Set local vars to the names in the payload
+        customTeam0Name = jdata["team0name"].get<std::string>();
+        customTeam1Name = jdata["team1name"].get<std::string>();
+    }
+    catch (std::exception e)
+    {
+        cvarManager->log("An error occured parsing a websocket message: " + std::string(e.what()));
+    }
 }
 
 void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
