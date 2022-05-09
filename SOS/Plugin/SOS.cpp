@@ -50,7 +50,7 @@ void SOS::onLoad()
     }, 1.f);
 
     //Create managers
-    Websocket  = std::make_shared<WebsocketManager>(cvarManager, *cvarPort);
+    Websocket  = std::make_shared<WebsocketManager>(cvarManager, *cvarPort, gameWrapper);
     BallSpeed  = std::make_shared<BallSpeedManager>(gameWrapper);
     Clock      = std::make_shared<ClockManager>(gameWrapper, Websocket);
     Nameplates = std::make_shared<NameplatesManager>();

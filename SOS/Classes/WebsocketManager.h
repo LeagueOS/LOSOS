@@ -18,7 +18,7 @@ class WebsocketManager
     using ConnectionSet = std::set<connection_hdl, std::owner_less<connection_hdl>>;
 
 public:
-    WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort);
+    WebsocketManager(std::shared_ptr<CVarManagerWrapper> InCvarManager, int InListenPort, std::shared_ptr<GameWrapper> InGameWrapper);
 
     void StartServer();
     void StopServer();
@@ -26,11 +26,14 @@ public:
     void SendEvent(std::string eventName, const json& jsawn);
     void SetbUseBase64(bool bNewValue) { bUseBase64 = bNewValue; }
 
+    void AssignTeamNames();
+
 private:
     WebsocketManager() = delete; // No default constructor
 
     std::shared_ptr<CVarManagerWrapper> cvarManager;
     int ListenPort = 49122;
+    std::shared_ptr<GameWrapper> gameWrapper;
     bool bUseBase64 = false;
     PluginServer* ws_server = nullptr;
     ConnectionSet* ws_connections = nullptr;
@@ -42,4 +45,7 @@ private:
     void OnWsClose(connection_hdl hdl) { ws_connections->erase(hdl); }
 
     json::string_t DumpMessage(json jon);
+
+    std::string customTeam0Name;
+    std::string customTeam1Name;
 };
