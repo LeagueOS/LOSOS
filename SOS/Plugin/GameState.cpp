@@ -86,7 +86,7 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
 
     state["players"][id]["name"] = name;
     state["players"][id]["id"] = id;
-    state["players"][id]["primaryID"] = std::to_string(pri.GetUniqueIdWrapper().GetUID()); // TODO: Needs to be replaced once UniqueIDWrapper gets better sorted out
+    state["players"][id]["primaryID"] = pri.GetUniqueIdWrapper().GetIdString();
     state["players"][id]["shortcut"] = pri.GetSpectatorShortcut();
     state["players"][id]["team"] = pri.GetTeamNum();
     state["players"][id]["score"] = pri.GetMatchScore();
