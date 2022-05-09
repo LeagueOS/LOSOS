@@ -106,6 +106,7 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
         state["players"][id]["hasCar"] = false;
         state["players"][id]["speed"] = 0;
         state["players"][id]["boost"] = 0;
+        state["players"][id]["isBoosting"] = false;
         state["players"][id]["isSonic"] = false;
 
         state["players"][id]["isDead"] = false;
@@ -155,6 +156,7 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
     state["players"][id]["hasCar"] = true;
     state["players"][id]["speed"] = static_cast<int>(SOSUtils::ToKPH(car.GetVelocity().magnitude()) + .5f);
     state["players"][id]["boost"] = static_cast<int>(boost * 100);
+    state["players"][id]["isBoosting"] = static_cast<bool>(car.GetBoostComponent().IsNull() ? false : car.GetBoostComponent().GetbActive());
     state["players"][id]["isSonic"] = car.GetbSuperSonic() ? true : false;
 }
 
