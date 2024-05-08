@@ -47,6 +47,10 @@ The websocket reports the following events in `channel:event` format:
       "hasWinner": "boolean",
       "isOT": "boolean",
       "isReplay": "boolean",
+      "mvp": {
+        "id": "string",
+        "name": "string"
+      },
       "target": "string",
       "teams": {
         "0": {
@@ -62,7 +66,8 @@ The websocket reports the following events in `channel:event` format:
           "score": "number"
         }
       },
-      "time": "number",
+      "time_milliseconds": "number",
+      "time_seconds": "number",
       "winner": "string"
     },
     "hasGame": "boolean",
@@ -76,6 +81,7 @@ The websocket reports the following events in `channel:event` format:
         "goals": "number",
         "hasCar": "boolean",
         "id": "string",
+        "isBoosting": "boolean",
         "isDead": "boolean",
         "isPowersliding": "boolean",
         "isSonic": "boolean",
@@ -117,7 +123,7 @@ The websocket reports the following events in `channel:event` format:
     }
   },
   "game:statfeed_event": {
-    "event_name": "string"
+    "event_name": "string",
     "main_target": {
       "id": "string",
       "name": "string",
@@ -153,6 +159,7 @@ The websocket reports the following events in `channel:event` format:
     "winner_team_num": "number"
   },
   "game:podium_start": "string",
+  "game:podium_end": "string",
   "game:match_destroyed": "string"
 }
 ```
