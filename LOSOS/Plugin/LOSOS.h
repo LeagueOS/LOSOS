@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 // SOS CLASS
-class SOS : public BakkesMod::Plugin::BakkesModPlugin
+class LOSOS : public BakkesMod::Plugin::BakkesModPlugin
 {
 public:
     void onLoad() override;
@@ -26,6 +26,8 @@ private:
     std::shared_ptr<int>   cvarPort;
     std::shared_ptr<float> cvarUpdateRate;
     std::shared_ptr<bool>  bEnableDebugRendering;
+    std::shared_ptr<bool>  cvarAutoHideGUI;
+    std::shared_ptr<bool>  cvarNameplates;
 
     // MANAGERS
     std::shared_ptr<WebsocketManager> Websocket;
@@ -64,9 +66,11 @@ private:
     void HookCountdownInit();
     void HookRoundStarted();
     void HookPodiumStart();
+    void HookPodiumEnd();
     void HookReplayCreated();
     void HookGoalReplayStart();
     void HookGoalReplayEnd();
+    void HookHUDVis();
     void HookStatEvent(ServerWrapper caller, void* params);
     void HookReplayScoreDataChanged(ActorWrapper caller);
 

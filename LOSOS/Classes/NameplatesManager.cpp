@@ -2,7 +2,7 @@
 #include "json.hpp"
 #include "RenderingTools.h"
 #include "Plugin/MacrosStructsEnums.h"
-#include "Plugin/SOSUtils.h"
+#include "Plugin/LOSOSUtils.h"
 
 void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper camera, ServerWrapper server, json& nameplatesState)
 {
@@ -48,7 +48,7 @@ void NameplatesManager::GetNameplateInfo(CanvasWrapper canvas, CameraWrapper cam
 void NameplatesManager::GetIndividualNameplate(CanvasWrapper canvas, CameraWrapper camera, RT::Frustum &frustum, CarWrapper car, json& nameplatesState)
 {
     std::string name, id;
-    SOSUtils::GetNameAndID(car.GetPRI(), name, id);
+    LOSOSUtils::GetNameAndID(car.GetPRI(), name, id);
     
     //Location of nameplate in 3D space
     Vector nameplateLoc = car.GetLocation() + Vector{0,0,60};

@@ -2,7 +2,7 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "json.hpp"
 #include "utils/parser.h"
-#include "Plugin/SOSUtils.h"
+#include "Plugin/LOSOSUtils.h"
 
 using nlohmann::json;
 
@@ -67,7 +67,7 @@ void WebsocketManager::StopServer()
 
 void WebsocketManager::AssignTeamNames()
 {
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper server = LOSOSUtils::GetCurrentGameState(gameWrapper);
     ArrayWrapper<TeamWrapper> teams = server.GetTeams();
 
     if (customTeam0Name.length() > 0 && teams.Count() > 0)
@@ -112,7 +112,7 @@ void WebsocketManager::OnHttpRequest(websocketpp::connection_hdl hdl)
 {
     PluginServer::connection_ptr connection = ws_server->get_con_from_hdl(hdl);
     connection->append_header("Content-Type", "application/json");
-    connection->append_header("Server", "SOS/" + std::string(SOS_VERSION));
+    connection->append_header("Server", "SOS/" + std::string(LOSOS_VERSION));
 
     json data;
     data["message"] = "HTTP unsupported by SOS. Use a websocket server such as the <a href='https://gitlab.com/bakkesplugins/sos/sos-ws-relay' target='_blank'>SOS-WS-Relay</a>";
@@ -142,7 +142,7 @@ void WebsocketManager::OnWsOpen(websocketpp::connection_hdl hdl) {
 
     json data;
     data["event"] = "sos:version";
-    data["data"] = std::string(SOS_VERSION);
+    data["data"] = std::string(LOSOS_VERSION);
     ws_server->send(hdl, DumpMessage(data), websocketpp::frame::opcode::text);
 }
 

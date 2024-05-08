@@ -2,7 +2,7 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "MacrosStructsEnums.h"
 
-namespace SOSUtils
+namespace LOSOSUtils
 {
     ServerWrapper GetCurrentGameState(std::shared_ptr<GameWrapper> gameWrapper);
 

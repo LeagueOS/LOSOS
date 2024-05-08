@@ -1,6 +1,6 @@
 #include "Classes/WebsocketManager.h"
 #include "ClockManager.h"
-#include "Plugin/SOSUtils.h"
+#include "Plugin/LOSOSUtils.h"
 
 ClockManager::ClockManager(std::shared_ptr<GameWrapper> InGameWrapper, std::shared_ptr<WebsocketManager> InWebsocketManager)
     : gameWrapper(InGameWrapper), Websocket(InWebsocketManager) {}
@@ -58,7 +58,7 @@ void ClockManager::OnClockUpdated()
     DeltaAggregate = 0.f;
 
     //Get the current second from the game
-    ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper Server = LOSOSUtils::GetCurrentGameState(gameWrapper);
     if(!Server.IsNull())
     {
         ReadClockTime = Server.GetSecondsRemaining();
@@ -101,7 +101,7 @@ float ClockManager::GetTime(bool bResetCurrentDelta)
     }
 
     //Check the current game status
-    ServerWrapper Server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper Server = LOSOSUtils::GetCurrentGameState(gameWrapper);
     if(!Server.IsNull())
     {
         bIsOvertime = Server.GetbOverTime();

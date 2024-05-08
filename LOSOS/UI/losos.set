@@ -1,0 +1,9 @@
+LOSOS - LeagueOS Overlay System
+1|Enable the LeagueOS Overlay System|LOSOS_enabled
+1|Auto Hide the Replay GUI|LOSOS_auto_hide_replay_gui
+1|Send Nameplate data (will hide nameplates if Auto Hide is enabled)|LOSOS_send_nameplates
+5|Rate at which to send events to websocket (milliseconds)|LOSOS_state_flush_rate|10|1000
+8|
+9|This Plugin is compatible with v1 of SOS, all existing overlays should still work
+8|
+9|Original dll code by gboddin, modified and extended by SimpleAOB, now Netizen01

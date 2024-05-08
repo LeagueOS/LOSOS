@@ -1,5 +1,5 @@
-#include "SOS.h"
-#include "SOSUtils.h"
+#include "LOSOS.h"
+#include "LOSOSUtils.h"
 #include "json.hpp"
 #include "RenderingTools.h"
 #include "utils/parser.h"
@@ -7,7 +7,7 @@
 
 using json = nlohmann::json;
 
-void SOS::UpdateGameState(CanvasWrapper canvas)
+void LOSOS::UpdateGameState(CanvasWrapper canvas)
 {
     //Initialize JSON objects
     json state;
@@ -22,12 +22,12 @@ void SOS::UpdateGameState(CanvasWrapper canvas)
     GetGameStateInfo(canvas, state);
 }
 
-void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
+void LOSOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
 {
     using namespace std::chrono;
 
     //Server is nullchecked in the viewport tick call to UpdateGameState
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper server = LOSOSUtils::GetCurrentGameState(gameWrapper);
 
     //Get ball speed every tick
     GetCurrentBallSpeed();
@@ -55,17 +55,19 @@ void SOS::GetGameStateInfo(CanvasWrapper canvas, json& state)
         Websocket->SendEvent("game:update_state", state);
     }
 
-    //Nameplates - twice the rate of game state for better positioning fidelity?
-    //Previously: if((TimeSinceLastNameplatesCall * 1000) < 11.11f) for 90fps rate
-    if(TimeSinceLastNameplatesCall >= ((*cvarUpdateRate * 0.5f) / 1000.f))
+    if (*cvarNameplates)
     {
-        GetNameplateInfo(canvas);
+        //Previously: if((TimeSinceLastNameplatesCall * 1000) < 11.11f) for 90fps rate
+        if(TimeSinceLastNameplatesCall >= (*cvarUpdateRate / 1000.f))
+        {
+            GetNameplateInfo(canvas);
 
-        LastNameplatesCallTime = steady_clock::now();
+            LastNameplatesCallTime = steady_clock::now();
+        }
     }
 }
 
-void SOS::GetPlayerInfo(json& state, ServerWrapper server)
+void LOSOS::GetPlayerInfo(json& state, ServerWrapper server)
 {
     ArrayWrapper<PriWrapper> PRIs = server.GetPRIs();
     for (int i = 0; i < PRIs.Count(); ++i)
@@ -77,10 +79,10 @@ void SOS::GetPlayerInfo(json& state, ServerWrapper server)
     }
 }
 
-void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
+void LOSOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
 {
     std::string name, id;
-    SOSUtils::GetNameAndID(pri, name, id);
+    LOSOSUtils::GetNameAndID(pri, name, id);
 
     state["players"][id] = json::object();
 
@@ -96,7 +98,7 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
     state["players"][id]["saves"] = pri.GetMatchSaves();
     state["players"][id]["touches"] = pri.GetBallTouches();
     state["players"][id]["cartouches"] = pri.GetCarTouches();
-    state["players"][id]["demos"] = SOS::DemoCounterGetCount(id);
+    state["players"][id]["demos"] = LOSOS::DemoCounterGetCount(id);
 
     CarWrapper car = pri.GetCar();
 
@@ -141,7 +143,7 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
         if(!att.IsNull())
         {
             std::string attName, attID;
-            SOSUtils::GetNameAndID(pri, attName, attID);
+            LOSOSUtils::GetNameAndID(pri, attName, attID);
             state["players"][id]["attacker"] = attID;
         }
     }
@@ -154,13 +156,13 @@ void SOS::GetIndividualPlayerInfo(json& state, PriWrapper pri)
     float boost = car.GetBoostComponent().IsNull() ? 0 : car.GetBoostComponent().GetPercentBoostFull();
 
     state["players"][id]["hasCar"] = true;
-    state["players"][id]["speed"] = static_cast<int>(SOSUtils::ToKPH(car.GetVelocity().magnitude()) + .5f);
+    state["players"][id]["speed"] = static_cast<int>(LOSOSUtils::ToKPH(car.GetVelocity().magnitude()) + .5f);
     state["players"][id]["boost"] = static_cast<int>(boost * 100);
     state["players"][id]["isBoosting"] = static_cast<bool>(car.GetBoostComponent().IsNull() ? false : car.GetBoostComponent().GetbActive());
     state["players"][id]["isSonic"] = car.GetbSuperSonic() ? true : false;
 }
 
-void SOS::GetTeamInfo(json& state, ServerWrapper server)
+void LOSOS::GetTeamInfo(json& state, ServerWrapper server)
 {
     //Not enough teams
     if (server.GetTeams().Count() != 2)
@@ -209,7 +211,7 @@ void SOS::GetTeamInfo(json& state, ServerWrapper server)
     }
 }
 
-void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
+void LOSOS::GetGameTimeInfo(json& state, ServerWrapper server)
 {
     float OutputTime = !firstCountdownHit ? 300.f : Clock->GetTime();
 
@@ -227,7 +229,7 @@ void SOS::GetGameTimeInfo(json& state, ServerWrapper server)
     LOGC(std::to_string(OutputTime));
 }
 
-void SOS::GetBallInfo(json& state, ServerWrapper server)
+void LOSOS::GetBallInfo(json& state, ServerWrapper server)
 {
     BallWrapper ball = server.GetBall();
 
@@ -252,7 +254,7 @@ void SOS::GetBallInfo(json& state, ServerWrapper server)
 	state["game"]["ball"]["location"]["Z"] = ballLocation.Z;
 }
 
-void SOS::GetWinnerInfo(json& state, ServerWrapper server)
+void LOSOS::GetWinnerInfo(json& state, ServerWrapper server)
 {
     TeamWrapper winner = server.GetGameWinner();
 
@@ -261,20 +263,33 @@ void SOS::GetWinnerInfo(json& state, ServerWrapper server)
     {
         state["game"]["hasWinner"] = false;
         state["game"]["winner"] = "";
+        state["game"]["mvp"]["name"] = "";
+        state["game"]["mvp"]["id"] = "";
         return;
     }
 
     //Get the winning team
     state["game"]["hasWinner"] = true;
     state["game"]["winner"] = winner.GetCustomTeamName().IsNull() ? "" : winner.GetCustomTeamName().ToString();
+    PriWrapper mvp = server.GetMVP();
+    if (mvp.IsNull()) {
+        state["game"]["mvp"]["name"] = "";
+        state["game"]["mvp"]["id"] = "";
+    }
+    else {
+        std::string mvpName, mvpID;
+        LOSOSUtils::GetNameAndID(mvp, mvpName, mvpID);
+        state["game"]["mvp"]["name"] = mvpName;
+        state["game"]["mvp"]["id"] = mvpID;
+    }
 }
 
-void SOS::GetArenaInfo(json& state)
+void LOSOS::GetArenaInfo(json& state)
 {
     state["game"]["arena"] = gameWrapper->GetCurrentMap();
 }
 
-void SOS::GetCameraInfo(json& state)
+void LOSOS::GetCameraInfo(json& state)
 {
     CameraWrapper cam = gameWrapper->GetCamera();
 
@@ -306,19 +321,17 @@ void SOS::GetCameraInfo(json& state)
 
     //Get the target's name
     std::string targetName, targetID;
-    SOSUtils::GetNameAndID(specPri, targetName, targetID);
+    LOSOSUtils::GetNameAndID(specPri, targetName, targetID);
     state["game"]["hasTarget"] = true;
     state["game"]["target"] = targetID;
 }
 
-void SOS::GetNameplateInfo(CanvasWrapper canvas)
-{
-    #ifdef USE_NAMEPLATES
-    
-    if(!SOSUtils::ShouldRun(gameWrapper)) { return; }
+void LOSOS::GetNameplateInfo(CanvasWrapper canvas)
+{    
+    if(!LOSOSUtils::ShouldRun(gameWrapper)) { return; }
     CameraWrapper camera = gameWrapper->GetCamera();
     if(camera.IsNull()) { return; }
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    ServerWrapper server = LOSOSUtils::GetCurrentGameState(gameWrapper);
     if(server.IsNull()) { return; }
 
     //Create nameplates JSON object
@@ -329,26 +342,24 @@ void SOS::GetNameplateInfo(CanvasWrapper canvas)
     //Get nameplate info and send through websocket
     Nameplates->GetNameplateInfo(canvas, camera, server, nameplatesState);
     Websocket->SendEvent("game:nameplate_tick", nameplatesState);
-    
-    #endif
 }
 
 
 // CALLED BY EVENT HOOKS //
-void SOS::GetCurrentBallSpeed()
+void LOSOS::GetCurrentBallSpeed()
 {
-    if (!SOSUtils::ShouldRun(gameWrapper)) { return; }
-    ServerWrapper server = SOSUtils::GetCurrentGameState(gameWrapper);
+    if (!LOSOSUtils::ShouldRun(gameWrapper)) { return; }
+    ServerWrapper server = LOSOSUtils::GetCurrentGameState(gameWrapper);
     if (server.IsNull()) { return; }
     BallWrapper ball = server.GetBall();
     if (ball.IsNull()) { return; }
 
-    BallSpeed->UpdateBallSpeed(SOSUtils::ToKPH(ball.GetVelocity().magnitude()) + .5f);
+    BallSpeed->UpdateBallSpeed(LOSOSUtils::ToKPH(ball.GetVelocity().magnitude()) + .5f);
 }
 
-void SOS::GetLastTouchInfo(CarWrapper car, void* params)
+void LOSOS::GetLastTouchInfo(CarWrapper car, void* params)
 {
-    if(!SOSUtils::ShouldRun(gameWrapper)) { return; }
+    if(!LOSOSUtils::ShouldRun(gameWrapper)) { return; }
 
     //Local struct
     struct HitBallParams
@@ -366,7 +377,7 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
     
     //Get player info
     std::string playerName, playerID;
-    SOSUtils::GetNameAndID(PRI, playerName, playerID);
+    LOSOSUtils::GetNameAndID(PRI, playerName, playerID);
 
     //Build ball touch event
     json ballTouchEvent;
@@ -391,7 +402,7 @@ void SOS::GetLastTouchInfo(CarWrapper car, void* params)
     }, 0.01f);
 }
 
-Vector2F SOS::GetGoalImpactLocation(BallWrapper ball, void* params)
+Vector2F LOSOS::GetGoalImpactLocation(BallWrapper ball, void* params)
 {
     // Goal Real Size: (1920, 752) - Extends past posts and ground
     // Goal Scoreable Zone: (1800, 640)
@@ -415,7 +426,7 @@ Vector2F SOS::GetGoalImpactLocation(BallWrapper ball, void* params)
     return Vector2F{ HitX, HitY };
 }
 
-void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
+void LOSOS::GetStatEventInfo(ServerWrapper caller, void* params)
 {
     auto tArgs = (DummyStatEventContainer*)params;
 
@@ -427,12 +438,12 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     //Receiver info
     auto receiver = PriWrapper(tArgs->Receiver);
     std::string receiverName, receiverID;
-    SOSUtils::GetNameAndID(receiver, receiverName, receiverID);
+    LOSOSUtils::GetNameAndID(receiver, receiverName, receiverID);
 
     //Victim info
     auto victim = PriWrapper(tArgs->Victim);
     std::string victimName, victimID;
-    SOSUtils::GetNameAndID(victim, victimName, victimID);
+    LOSOSUtils::GetNameAndID(victim, victimName, victimID);
 
     //General statfeed event
     json statfeed;
@@ -450,11 +461,11 @@ void SOS::GetStatEventInfo(ServerWrapper caller, void* params)
     //Demolition event
     if (eventName == "Demolish")
     {
-        SOS::DemoCounterIncrement(receiverID);
+        LOSOS::DemoCounterIncrement(receiverID);
     }
 }
 
-void SOS::DemoCounterIncrement(std::string playerId)
+void LOSOS::DemoCounterIncrement(std::string playerId)
 {
     if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
         DemolitionCountMap[playerId] = 1;
@@ -463,7 +474,7 @@ void SOS::DemoCounterIncrement(std::string playerId)
     }
 }
 
-int SOS::DemoCounterGetCount(std::string playerId)
+int LOSOS::DemoCounterGetCount(std::string playerId)
 {
     if (DemolitionCountMap.find(playerId) == DemolitionCountMap.end()) {
         return 0;

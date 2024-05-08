@@ -1,8 +1,8 @@
-#include "SOS.h"
+#include "LOSOS.h"
 #include "utils/parser.h"
 #include <sstream>
 
-void SOS::DebugRender(CanvasWrapper canvas)
+void LOSOS::DebugRender(CanvasWrapper canvas)
 {
     if(!*bEnableDebugRendering) { return; }
 
@@ -22,7 +22,7 @@ void SOS::DebugRender(CanvasWrapper canvas)
     DrawTextVector(canvas, Vector2{50,50}, TextVector);
 }
 
-void SOS::DrawTextVector(CanvasWrapper Canvas, Vector2 StartPosition, const std::vector<DebugText>& TextVector)
+void LOSOS::DrawTextVector(CanvasWrapper Canvas, Vector2 StartPosition, const std::vector<DebugText>& TextVector)
 {
     for(const auto& Text : TextVector)
     {

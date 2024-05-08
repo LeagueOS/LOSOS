@@ -67,7 +67,7 @@
     <ClCompile Include="Classes\WebsocketManager.cpp">
       <Filter>Plugin Code\Classes\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="Plugin\SOS.cpp">
+    <ClCompile Include="Plugin\LOSOS.cpp">
       <Filter>Plugin Code\Main</Filter>
     </ClCompile>
     <ClCompile Include="Plugin\DebugRenderer.cpp">
@@ -79,7 +79,7 @@
     <ClCompile Include="Plugin\GameState.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>
-    <ClCompile Include="Plugin\SOSUtils.cpp">
+    <ClCompile Include="Plugin\LOSOSUtils.cpp">
       <Filter>Plugin Code\Support Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,13 +153,13 @@
     <ClInclude Include="Classes\WebsocketManager.h">
       <Filter>Plugin Code\Classes\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Plugin\SOS.h">
+    <ClInclude Include="Plugin\LOSOS.h">
       <Filter>Plugin Code\Main</Filter>
     </ClInclude>
     <ClInclude Include="Plugin\MacrosStructsEnums.h">
       <Filter>Plugin Code\Support Files</Filter>
     </ClInclude>
-    <ClInclude Include="Plugin\SOSUtils.h">
+    <ClInclude Include="Plugin\LOSOSUtils.h">
       <Filter>Plugin Code\Support Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -167,7 +167,7 @@
     <None Include="..\README.md">
       <Filter>Extra Files</Filter>
     </None>
-    <None Include="UI\sos.set">
+    <None Include="UI\losos.set">
       <Filter>Plugin Code\UI</Filter>
     </None>
   </ItemGroup>

@@ -1,7 +1,7 @@
-#include "SOSUtils.h"
+#include "LOSOSUtils.h"
 #include "RenderingTools.h"
 
-ServerWrapper SOSUtils::GetCurrentGameState(std::shared_ptr<GameWrapper> gameWrapper)
+ServerWrapper LOSOSUtils::GetCurrentGameState(std::shared_ptr<GameWrapper> gameWrapper)
 {
     if(gameWrapper->IsInReplay())
 		return gameWrapper->GetGameEventAsReplay().memory_address;
@@ -11,8 +11,9 @@ ServerWrapper SOSUtils::GetCurrentGameState(std::shared_ptr<GameWrapper> gameWra
 		return gameWrapper->GetGameEventAsServer();
 }
 
-bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
+bool LOSOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
 {
+
     //Check if server exists
     ServerWrapper server = GetCurrentGameState(gameWrapper);
     if (server.IsNull())
@@ -26,6 +27,9 @@ bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
     {
         return true;
     }
+
+    // Quick return here for testing in new modes
+    // return true;
 
     //Check if player is spectating
     if (!gameWrapper->GetLocalCar().IsNull())
@@ -43,9 +47,10 @@ bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
 
     //Check if server playlist is valid
     // 6:  Private Match
+    // 8:  Exhibition
     // 22: Custom Tournaments
     // 24: LAN Match
-    static const std::vector<int> SafePlaylists = {6, 22, 24};
+    static const std::vector<int> SafePlaylists = {6, 8, 22, 24};
     int playlistID = server.GetPlaylist().GetPlaylistId();
     if (!IsSafeMode(playlistID, SafePlaylists))
     {
@@ -73,7 +78,7 @@ bool SOSUtils::ShouldRun(std::shared_ptr<GameWrapper> gameWrapper)
     return true;
 }
 
-bool SOSUtils::IsSafeMode(int CurrentPlaylist, const std::vector<int>& SafePlaylists)
+bool LOSOSUtils::IsSafeMode(int CurrentPlaylist, const std::vector<int>& SafePlaylists)
 {
     for(const auto& SafePlaylist : SafePlaylists)
     {
@@ -86,13 +91,13 @@ bool SOSUtils::IsSafeMode(int CurrentPlaylist, const std::vector<int>& SafePlayl
     return false;
 }
 
-float SOSUtils::ToKPH(float RawSpeed)
+float LOSOSUtils::ToKPH(float RawSpeed)
 {
     //Raw speed from game is cm/s
     return (RawSpeed * 0.036f);
 }
 
-void SOSUtils::GetNameAndID(PriWrapper PRI, std::string& name, std::string& ID)
+void LOSOSUtils::GetNameAndID(PriWrapper PRI, std::string& name, std::string& ID)
 {
     //Use this whenever you need a player's name and ID in a JSON object
     if (PRI.IsNull())

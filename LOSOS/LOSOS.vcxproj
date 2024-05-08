@@ -14,9 +14,9 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{DCA29E11-A90E-4840-B2AE-BFCC4EA5B444}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>BakkesTest</RootNamespace>
+    <RootNamespace>LOSOS</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SOS</ProjectName>
+    <ProjectName>LOSOS</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -123,8 +123,8 @@
     <ClInclude Include="Classes\NameplatesManager.h" />
     <ClInclude Include="Classes\WebsocketManager.h" />
     <ClInclude Include="Plugin\MacrosStructsEnums.h" />
-    <ClInclude Include="Plugin\SOS.h" />
-    <ClInclude Include="Plugin\SOSUtils.h" />
+    <ClInclude Include="Plugin\LOSOS.h" />
+    <ClInclude Include="Plugin\LOSOSUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sos-plugin-includes\RenderingTools\Extra\CanvasExtensions.cpp" />
@@ -152,12 +152,12 @@
     <ClCompile Include="Plugin\DebugRenderer.cpp" />
     <ClCompile Include="Plugin\EventHooks.cpp" />
     <ClCompile Include="Plugin\GameState.cpp" />
-    <ClCompile Include="Plugin\SOS.cpp" />
-    <ClCompile Include="Plugin\SOSUtils.cpp" />
+    <ClCompile Include="Plugin\LOSOS.cpp" />
+    <ClCompile Include="Plugin\LOSOSUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="UI\sos.set" />
+    <None Include="UI\losos.set" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
